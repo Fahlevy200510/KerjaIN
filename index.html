@@ -10,6 +10,12 @@
 </head>
 <body class="bg-tech-grid">
 
+  <!-- Banner disclaimer demo -->
+  <div class="demo-banner" role="note">
+    <strong>Prototipe Demo</strong> &mdash; dibuat untuk presentasi mata kuliah Kewirausahaan.
+    Seluruh data, angka, studi kasus, dan transaksi di situs ini bersifat <strong>simulasi / ilustrasi</strong>.
+  </div>
+
   <!-- Top Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
@@ -33,6 +39,7 @@
         <li><a class="nav-link" href="#alur-kerja">Cara Kerja</a></li>
         <li><a class="nav-link" href="#kalkulator">Estimasi Biaya</a></li>
         <li><a class="nav-link" href="#portofolio">Portofolio</a></li>
+        <li><a class="nav-link" href="#faq">FAQ</a></li>
         <li><a class="nav-link" href="#" onclick="window.setActiveRole('admin'); return false;" style="font-weight:600; color:var(--primary);">Login Admin</a></li>
       </ul>
 
@@ -93,11 +100,11 @@
           <div class="hero-stats">
             <div class="stat-item">
               <h4>1.200+</h4>
-              <p>Proyek Terealisasi</p>
+              <p>Proyek Terealisasi (data ilustrasi)</p>
             </div>
             <div class="stat-item">
               <h4>98.5%</h4>
-              <p>Ketepatan Waktu (On-Time)</p>
+              <p>Ketepatan Waktu (target)</p>
             </div>
             <div class="stat-item">
               <h4>100%</h4>
@@ -293,7 +300,7 @@ ModbusMaster node;
         <div class="step-card">
           <div class="step-number">4</div>
           <h4>Pelunasan & Serah Terima Master</h4>
-          <p>Setelah seluruh luaran disetujui, klien menyelesaikan pelunasan termin 2 untuk membuka akses pengunduhan berkas sumber asli (.SLDPRT, .STEP, .INO).</p>
+          <p>Setelah seluruh luaran disetujui, klien menyelesaikan pelunasan termin 2 untuk membuka berkas sumber asli (.SLDPRT, .STEP, .INO), disertai sesi penjelasan (walkthrough) agar hasilnya benar-benar dipahami.</p>
         </div>
       </div>
     </section>
@@ -395,10 +402,10 @@ ModbusMaster node;
     <!-- Showcase Portofolio & Studi Kasus (§5) -->
     <section class="section" id="portofolio">
       <div class="section-header">
-        <span class="section-tag">Hasil Kerja Terverifikasi</span>
+        <span class="section-tag">Contoh Studi Kasus</span>
         <h3 class="section-title">Galeri Portofolio & Studi Kasus</h3>
         <p class="section-subtitle">
-          Beberapa proyek nyata mahasiswa dan tim robotika yang telah sukses disidangkan dan diujicobakan di laboratorium.
+          Contoh studi kasus ilustrasi yang menggambarkan jenis proyek mahasiswa dan tim robotika yang dapat didampingi KerjaIN.
         </p>
       </div>
 
@@ -471,6 +478,61 @@ ModbusMaster node;
             </button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- FAQ & Integritas Akademik -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <span class="section-tag">Transparansi</span>
+        <h3 class="section-title">Integritas Akademik & Pertanyaan Umum</h3>
+        <p class="section-subtitle">
+          KerjaIN adalah layanan bimbingan teknis. Mahasiswa tetap menjadi pemilik karya dan wajib memahami hasil akhirnya.
+        </p>
+      </div>
+
+      <div class="faq-wrap">
+        <details class="faq-item" open>
+          <summary>Apakah KerjaIN layanan joki tugas?</summary>
+          <p>
+            Bukan. Fokus kami adalah bimbingan dan asistensi teknis untuk proyek rancang-bangun (prototipe, PKM, lomba robotika, tugas akhir)
+            yang memerlukan arahan praktisi. Setiap penyerahan hasil disertai sesi penjelasan (<em>walkthrough</em>) dan dokumentasi,
+            sehingga mahasiswa memahami apa yang dikerjakan dan dapat mempertanggungjawabkannya saat sidang.
+            Kami menolak permintaan yang jelas melanggar aturan akademik kampus, seperti ujian atau tugas tulis individual.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Bagaimana sistem escrow melindungi saya?</summary>
+          <p>
+            DP 50% disimpan di rekening bersama dan baru diteruskan ke konsultan sesuai tahapan yang disepakati.
+            Pelunasan 50% dilakukan saat hasil disetujui, dan baru setelah itu file master asli terbuka.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Bagaimana jika hasilnya belum sesuai?</summary>
+          <p>
+            Setiap quotation mencakup 3x revisi terstruktur sesuai Scope of Work. Permintaan di luar cakupan awal
+            dimediasi admin melalui adendum biaya yang disepakati kedua pihak.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Apakah file dan topik proyek saya aman?</summary>
+          <p>
+            Hasil kerja ditinjau lewat preview ber-<em>watermark</em>, sedangkan file master terkunci sampai pelunasan.
+            Topik dan rancangan Anda dijaga kerahasiaannya melalui perjanjian NDA.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Berapa biaya dan bisakah patungan kelompok?</summary>
+          <p>
+            Biaya mulai dari Rp 85.000 tergantung bidang dan kompleksitas. Gunakan kalkulator di atas untuk mendapat kisaran,
+            dan untuk tugas besar kelompok biaya dapat dibagi per anggota.
+          </p>
+        </details>
       </div>
     </section>
 
@@ -574,7 +636,7 @@ ModbusMaster node;
 
         <ul class="sidebar-nav">
           <li><button class="side-item-btn active"><span>📂 Proyek Aktif</span></button></li>
-          <li><button class="side-item-btn" onclick="alert('Daftar Konsultasi: Sesi berikutnya terjadwal via Google Meet.')"><span>📅 Konsultasi Saya</span></button></li>
+          <li><button class="side-item-btn" onclick="window.showToast('Daftar Konsultasi: Sesi berikutnya terjadwal via Google Meet.')"><span>📅 Konsultasi Saya</span></button></li>
           <li><button class="side-item-btn" onclick="window.triggerPaymentModal()"><span>💳 Tagihan & Escrow</span></button></li>
           <li><button class="side-item-btn" onclick="window.triggerQuotationModal()"><span>📄 Dokumen Penawaran</span></button></li>
         </ul>
@@ -791,7 +853,7 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
     <div class="vault-card">
       <div class="vault-header">
         <h4>File Manager Engineer & Lock System Control (FR-E03)</h4>
-        <button class="btn btn-outline btn-sm" onclick="alert('Simulasi: File preview baru berhasil diunggah dengan auto-watermark KerjaIN.')">
+        <button class="btn btn-outline btn-sm" onclick="window.showToast('Simulasi: File preview baru berhasil diunggah dengan auto-watermark KerjaIN.')">
           + Unggah File Preview Baru
         </button>
       </div>
@@ -868,10 +930,10 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
           <div class="admin-system-status">
             <div class="status-indicator-row">
               <span class="status-dot-pulse"></span>
-              <span>Sistem Operasional: <strong>Normal (Enkripsi TLS 1.3)</strong></span>
+              <span>Sistem Operasional: <strong>Normal (Simulasi)</strong></span>
             </div>
             <div class="system-meta-info">
-              <span>Environment: <code>Production / Vercel Edge</code></span>
+              <span>Environment: <code>Demo / Simulasi</code></span>
               <span>Gateway: <code>Escrow-Vault-ID-01 Active</code></span>
             </div>
           </div>
@@ -950,7 +1012,7 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
                 <input type="checkbox" id="admin-page-remember" checked>
                 <span>Ingat sesi di workstation ini</span>
               </label>
-              <span class="auth-security-badge">256-Bit SSL</span>
+              <span class="auth-security-badge">Mode Demo</span>
             </div>
 
             <button type="submit" id="btn-admin-submit-login" class="btn btn-primary btn-auth-submit">
@@ -1141,7 +1203,7 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
       <div class="vault-card" style="margin-bottom:2rem;">
         <div class="vault-header">
           <h4>Dispute Resolution Center & Garansi Hak (FR-A03)</h4>
-          <button class="btn btn-outline btn-sm" onclick="alert('Semua kasus mediasi saat ini telah terselesaikan secara damai.')">
+          <button class="btn btn-outline btn-sm" onclick="window.showToast('Semua kasus mediasi saat ini telah terselesaikan secara damai.')">
             Cek Log Mediasi
           </button>
         </div>
@@ -1536,6 +1598,24 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
     </div>
   </div>
 
+  <!-- Panduan Demo Presentasi -->
+  <div class="demo-guide" id="demo-guide">
+    <div class="demo-guide-panel" id="demo-guide-panel" hidden>
+      <h4>Alur Demo Presentasi</h4>
+      <ol>
+        <li><button type="button" data-demo-step="1">Masalah &amp; layanan (Beranda)</button></li>
+        <li><button type="button" data-demo-step="2">Kalkulator estimasi biaya</button></li>
+        <li><button type="button" data-demo-step="3">Booking konsultasi gratis</button></li>
+        <li><button type="button" data-demo-step="4">Mahasiswa: milestone, brankas file, bayar QRIS</button></li>
+        <li><button type="button" data-demo-step="5">Konsultan: quotation builder</button></li>
+        <li><button type="button" data-demo-step="6">Admin: escrow, komisi 18%, analisis finansial</button></li>
+      </ol>
+    </div>
+    <button type="button" class="demo-guide-toggle" id="demo-guide-toggle" aria-expanded="false" aria-controls="demo-guide-panel">
+      &#9654; Panduan Demo
+    </button>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -1567,9 +1647,9 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
       <div class="footer-col">
         <h4>Keamanan & Legal</h4>
         <ul class="footer-links">
-          <li><a href="javascript:void(0)" onclick="alert('Sistem Escrow KerjaIN melindungi hak mahasiswa dan hak konsultan secara berimbang.')">Sistem Escrow Terjamin</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Perjanjian Kerahasiaan (NDA): Topik skripsi dan file rancangan dijamin 100% rahasia.')">Kerahasiaan Proyek (NDA)</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Garansi Revisi: 3x jatah revisi gratis untuk setiap quotation yang disepakati.')">Kebijakan Revisi</a></li>
+          <li><a href="javascript:void(0)" onclick="window.showToast('Sistem Escrow KerjaIN melindungi hak mahasiswa dan hak konsultan secara berimbang.')">Sistem Escrow Terjamin</a></li>
+          <li><a href="javascript:void(0)" onclick="window.showToast('Perjanjian Kerahasiaan (NDA): Topik skripsi dan file rancangan dijamin 100% rahasia.')">Kerahasiaan Proyek (NDA)</a></li>
+          <li><a href="javascript:void(0)" onclick="window.showToast('Garansi Revisi: 3x jatah revisi gratis untuk setiap quotation yang disepakati.')">Kebijakan Revisi</a></li>
           <li><a href="javascript:void(0)" onclick="window.kerjainStore.setRole('admin'); window.scrollTo({top:0, behavior:'smooth'});" style="color:var(--accent);">⚡ Dashboard Admin (Monitoring Order)</a></li>
         </ul>
       </div>

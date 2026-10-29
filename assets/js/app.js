@@ -1010,6 +1010,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Panduan Demo Presentasi ---
+  (function initDemoGuide() {
+    const toggle = document.getElementById('demo-guide-toggle');
+    const panel = document.getElementById('demo-guide-panel');
+    if (!toggle || !panel) return;
+
+    const steps = {
+      '1': { role: 'public', target: '#layanan' },
+      '2': { role: 'public', target: '#kalkulator' },
+      '3': { role: 'public', target: '#booking-section' },
+      '4': { role: 'client', target: null },
+      '5': { role: 'engineer', target: null },
+      '6': { role: 'admin', target: null }
+    };
+
+    toggle.addEventListener('click', () => {
+      const willOpen = panel.hasAttribute('hidden');
+      if (willOpen) panel.removeAttribute('hidden');
+      else panel.setAttribute('hidden', '');
+      toggle.setAttribute('aria-expanded', String(willOpen));
+    });
+
+    panel.querySelectorAll('[data-demo-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const step = steps[btn.dataset.demoStep];
+        if (!step) return;
+        setActiveRole(step.role);
+
+        if (step.role === 'admin') {
+          const loginScreen = document.getElementById('admin-login-screen');
+          const quickFill = document.getElementById('btn-admin-page-quick-fill');
+          if (loginScreen && loginScreen.style.display !== 'none' && quickFill) quickFill.click();
+        }
+
+        setTimeout(() => {
+          const el = step.target ? document.querySelector(step.target) : null;
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          else window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 80);
+
+        panel.querySelectorAll('[data-demo-step]').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+  })();
+
   // --- Toast Notification Manager ---
   function showToast(message, type = 'primary') {
     const container = document.getElementById('toast-container');
