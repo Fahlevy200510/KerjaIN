@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "KerjaIN - Platform Asistensi Rekayasa & Konsultasi Teknis STEM",
   "scripts": {
-    "build": "echo 'Static build complete'",
     "start": "node scripts/server.js",
     "test": "node test_kerjain_store.js"
   },
