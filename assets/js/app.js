@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const paymentModal = document.getElementById('modal-payment');
   const revisionModal = document.getElementById('modal-revision');
   const quotationModal = document.getElementById('modal-quotation');
+  const adminOrderDetailModal = document.getElementById('modal-admin-order-detail');
+
+  // Admin Dashboard State
+  let activeAdminTab = 'orders';
+  let orderStatusFilter = 'ALL';
+  let orderSearchQuery = '';
 
   // --- Navigation & Role Switching ---
   function setActiveRole(role) {
@@ -297,7 +303,142 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Admin Dispatcher Table
+    // Admin Dashboard: Metric Badges & Counts
+    const escrowVaultVal = document.getElementById('admin-escrow-vault');
+    const platformRevVal = document.getElementById('admin-platform-rev');
+    const activeOrdersCountVal = document.getElementById('admin-active-orders-count');
+    const badgeCountOrders = document.getElementById('badge-count-orders');
+    const badgeCountLeads = document.getElementById('badge-count-leads');
+    const badgeCountDisputes = document.getElementById('badge-count-disputes');
+
+    const ordersList = state.admin.orders || [];
+    const activeOrders = ordersList.filter(o => o.escrowStatus !== 'PAID_IN_FULL');
+
+    if (escrowVaultVal) {
+      escrowVaultVal.textContent = `Rp ${state.admin.totalEscrowVault.toLocaleString('id-ID')}`;
+    }
+    if (platformRevVal) {
+      platformRevVal.textContent = `Rp ${state.admin.platformRevenue.toLocaleString('id-ID')}`;
+    }
+    if (activeOrdersCountVal) {
+      activeOrdersCountVal.textContent = `${activeOrders.length} Proyek`;
+    }
+    if (badgeCountOrders) badgeCountOrders.textContent = ordersList.length;
+    if (badgeCountLeads) badgeCountLeads.textContent = state.admin.incomingLeads.length;
+    if (badgeCountDisputes) badgeCountDisputes.textContent = state.admin.disputes.length;
+
+    // Admin Orders Pipeline Table (FR-A02)
+    const ordersTableBody = document.getElementById('admin-orders-table-body');
+    if (ordersTableBody) {
+      let filteredOrders = ordersList;
+
+      // Status filter
+      if (orderStatusFilter !== 'ALL') {
+        filteredOrders = filteredOrders.filter(o => o.escrowStatus === orderStatusFilter);
+      }
+
+      // Search filter
+      if (orderSearchQuery.trim() !== '') {
+        const q = orderSearchQuery.toLowerCase();
+        filteredOrders = filteredOrders.filter(o => 
+          o.id.toLowerCase().includes(q) ||
+          o.clientName.toLowerCase().includes(q) ||
+          o.univ.toLowerCase().includes(q) ||
+          o.title.toLowerCase().includes(q) ||
+          o.category.toLowerCase().includes(q)
+        );
+      }
+
+      if (filteredOrders.length === 0) {
+        ordersTableBody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">
+              Tidak ada order yang sesuai dengan kriteria filter "${orderStatusFilter}".
+            </td>
+          </tr>
+        `;
+      } else {
+        ordersTableBody.innerHTML = filteredOrders.map(order => {
+          let statusBadge = '';
+          if (order.escrowStatus === 'WAITING_DP') {
+            statusBadge = '<span class="status-badge status-warning">⏳ Menunggu DP 50%</span>';
+          } else if (order.escrowStatus === 'DP_VERIFIED') {
+            statusBadge = '<span class="status-badge status-active">🔒 Escrow DP Aktif</span>';
+          } else if (order.escrowStatus === 'REVIEW_DRAFT') {
+            statusBadge = '<span class="status-badge status-purple">👁️ Review Watermark</span>';
+          } else if (order.escrowStatus === 'PAID_IN_FULL') {
+            statusBadge = '<span class="status-badge status-completed">✓ Lunas & Selesai</span>';
+          } else if (order.escrowStatus === 'WAITING_ASSIGNMENT') {
+            statusBadge = '<span class="status-badge status-neutral">❓ Perlu Konsultan</span>';
+          }
+
+          const waUrl = `https://wa.me/62${order.phone.replace(/^0/, '')}?text=Halo%20${encodeURIComponent(order.clientName)}%2C%20dari%20Admin%20KerjaIN%20mengenai%20proyek%20${order.id}`;
+
+          return `
+            <tr>
+              <td>
+                <span class="font-mono" style="font-weight:700; color:var(--primary); font-size:0.9rem;">#${order.id}</span>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${order.createdAt}</div>
+              </td>
+              <td>
+                <strong>${order.clientName}</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${order.univ}</div>
+                <a href="${waUrl}" target="_blank" style="font-size:0.75rem; color:#059669; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:3px; margin-top:2px;">
+                  💬 Chat WA
+                </a>
+              </td>
+              <td>
+                <div style="font-weight:600; font-size:0.875rem; max-width:240px; white-space:normal;">${order.title}</div>
+                <div style="margin-top:4px;">
+                  <span class="badge-pill" style="font-size:0.7rem; font-weight:700; background:var(--surface-alt); border:1px solid var(--border);">${order.category}</span>
+                </div>
+              </td>
+              <td>
+                <div class="font-mono" style="font-weight:700; font-size:0.9rem;">Rp ${order.totalCost.toLocaleString('id-ID')}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                  DP: Rp ${order.dpPaid.toLocaleString('id-ID')} &bull; Sisa: Rp ${order.balanceDue.toLocaleString('id-ID')}
+                </div>
+              </td>
+              <td>${statusBadge}</td>
+              <td>
+                <div style="font-size:0.78rem; font-weight:600;">Step ${order.progressStep}/5</div>
+                <div class="mini-progress-wrap" title="Progress Milestone Step ${order.progressStep} dari 5">
+                  <div class="mini-progress-fill" style="width:${order.progressStep * 20}%;"></div>
+                </div>
+              </td>
+              <td>
+                ${order.consultant ? `
+                  <span style="font-size:0.825rem; font-weight:600;">${order.consultant}</span>
+                ` : `
+                  <button class="btn btn-outline btn-sm" style="font-size:0.72rem; padding:0.25rem 0.5rem;" onclick="window.adminAssignOrderAction('${order.id}')">
+                    + Tugaskan
+                  </button>
+                `}
+              </td>
+              <td style="text-align:center;">
+                <div style="display:flex; gap:0.35rem; justify-content:center; flex-wrap:wrap;">
+                  <button class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:0.25rem 0.6rem;" onclick="window.openAdminOrderDetail('${order.id}')" title="Buka Detail Brief & Finansial">
+                    🔍 Detail
+                  </button>
+                  ${order.escrowStatus === 'WAITING_DP' ? `
+                    <button class="btn btn-primary btn-sm" style="font-size:0.75rem; padding:0.25rem 0.6rem;" onclick="window.adminVerifyDpAction('${order.id}')" title="Verifikasi Pembayaran DP 50%">
+                      ✓ Verif DP
+                    </button>
+                  ` : ''}
+                  ${order.escrowStatus === 'REVIEW_DRAFT' ? `
+                    <button class="btn btn-accent btn-sm" style="font-size:0.75rem; padding:0.25rem 0.6rem;" onclick="window.adminReleaseEscrowAction('${order.id}')" title="Rilis Dana Escrow Pelunasan">
+                      💸 Rilis Escrow
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // Admin Dispatcher Table (Leads)
     const leadsTableBody = document.getElementById('admin-leads-table-body');
     if (leadsTableBody) {
       leadsTableBody.innerHTML = state.admin.incomingLeads.map(lead => `
@@ -317,16 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
         </tr>
       `).join('');
-    }
-
-    // Admin Escrow Vault
-    const escrowVaultVal = document.getElementById('admin-escrow-vault');
-    const platformRevVal = document.getElementById('admin-platform-rev');
-    if (escrowVaultVal) {
-      escrowVaultVal.textContent = `Rp ${state.admin.totalEscrowVault.toLocaleString('id-ID')}`;
-    }
-    if (platformRevVal) {
-      platformRevVal.textContent = `Rp ${state.admin.platformRevenue.toLocaleString('id-ID')}`;
     }
 
     // Consultant Wallet & Stats
@@ -396,6 +527,214 @@ document.addEventListener('DOMContentLoaded', () => {
   window.assignLead = function(leadId) {
     store.assignLead(leadId, 'Dian Pratama, S.T.');
     showToast(`Lead ${leadId} berhasil ditugaskan ke Engineer Dian Pratama!`, 'success');
+  };
+
+  // --- Admin Dashboard Interactivity & Tabs ---
+  window.switchAdminTab = function(tabName) {
+    activeAdminTab = tabName;
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
+    document.querySelectorAll('.admin-tab-panel').forEach(panel => {
+      panel.style.display = panel.id === `admin-tab-${tabName}` ? 'block' : 'none';
+    });
+  };
+
+  window.filterAdminOrders = function(status) {
+    orderStatusFilter = status;
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.classList.toggle('active', pill.dataset.filter === status);
+    });
+    renderWorkspace();
+  };
+
+  window.searchAdminOrders = function(query) {
+    orderSearchQuery = query;
+    renderWorkspace();
+  };
+
+  window.adminVerifyDpAction = function(orderId) {
+    if (confirm(`Verifikasi pembayaran DP 50% untuk Order #${orderId} masuk ke Escrow Vault?`)) {
+      store.adminVerifyDp(orderId);
+      showToast(`DP 50% untuk Order #${orderId} berhasil diverifikasi! Dana tersimpan aman di Escrow Vault.`, 'success');
+      if (adminOrderDetailModal && adminOrderDetailModal.classList.contains('active')) {
+        window.openAdminOrderDetail(orderId);
+      }
+    }
+  };
+
+  window.adminReleaseEscrowAction = function(orderId) {
+    if (confirm(`Rilis dana pelunasan Escrow untuk Order #${orderId} ke rekening mitra konsultan? File master akan diserahkan penuh ke mahasiswa.`)) {
+      store.adminReleaseEscrow(orderId);
+      showToast(`Dana Escrow Order #${orderId} berhasil dirilis ke konsultan! Komisi platform 18% tercatat di pendapatan.`, 'success');
+      if (adminOrderDetailModal && adminOrderDetailModal.classList.contains('active')) {
+        window.openAdminOrderDetail(orderId);
+      }
+    }
+  };
+
+  window.adminAssignOrderAction = function(orderId) {
+    const consultant = prompt('Tugaskan ke konsultan berlisensi:\n1. Dian Pratama, S.T. (Mekatronika & IoT)\n2. Hendra Kusuma, S.T. (Elektronika & PCB)\n3. Bayu Wicaksono, S.T. (Desain 3D Mekanikal)', 'Dian Pratama, S.T.');
+    if (consultant) {
+      store.adminAssignConsultant(orderId, consultant);
+      showToast(`Order #${orderId} berhasil ditugaskan ke ${consultant}!`, 'success');
+      if (adminOrderDetailModal && adminOrderDetailModal.classList.contains('active')) {
+        window.openAdminOrderDetail(orderId);
+      }
+    }
+  };
+
+  window.openAdminOrderDetail = function(orderId) {
+    const state = store.getState();
+    const order = (state.admin.orders || []).find(o => o.id === orderId);
+    if (!order) return;
+
+    const modalTitle = document.getElementById('admin-modal-order-title');
+    const modalContent = document.getElementById('admin-modal-order-content');
+    const modalFooter = document.getElementById('admin-modal-order-footer');
+
+    if (modalTitle) modalTitle.textContent = `Detail Order Proyek #${order.id}`;
+
+    const platformFee = Math.round(order.totalCost * 0.18);
+    const consultantNet = order.totalCost - platformFee;
+    const dpRequired = Math.round(order.totalCost * 0.5);
+
+    let statusHtml = '';
+    if (order.escrowStatus === 'WAITING_DP') {
+      statusHtml = '<span class="status-badge status-warning">⏳ Menunggu Verifikasi DP 50%</span>';
+    } else if (order.escrowStatus === 'DP_VERIFIED') {
+      statusHtml = '<span class="status-badge status-active">🔒 Escrow DP Terverifikasi (Pengerjaan)</span>';
+    } else if (order.escrowStatus === 'REVIEW_DRAFT') {
+      statusHtml = '<span class="status-badge status-purple">👁️ Tahap Review Watermark Draft</span>';
+    } else if (order.escrowStatus === 'PAID_IN_FULL') {
+      statusHtml = '<span class="status-badge status-completed">✓ Proyek Lunas & Master File Terbuka</span>';
+    } else if (order.escrowStatus === 'WAITING_ASSIGNMENT') {
+      statusHtml = '<span class="status-badge status-neutral">❓ Menunggu Penugasan Konsultan</span>';
+    }
+
+    if (modalContent) {
+      modalContent.innerHTML = `
+        <div class="order-detail-header-card">
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">PROYEK REKAYASA &bull; STEM</div>
+            <h4 style="font-size:1.15rem; margin:0.25rem 0; font-weight:800; color:var(--text-heading);">${order.title}</h4>
+            <div style="font-size:0.85rem; color:var(--text-muted);">${order.category} &bull; ${order.software}</div>
+          </div>
+          <div>${statusHtml}</div>
+        </div>
+
+        <div class="order-detail-grid">
+          <div class="order-info-box">
+            <h5>🎓 Profil Klien & Kampus</h5>
+            <div class="info-row"><span class="info-label">Nama Mahasiswa</span><span class="info-val">${order.clientName}</span></div>
+            <div class="info-row"><span class="info-label">Universitas & Jurusan</span><span class="info-val">${order.univ}</span></div>
+            <div class="info-row"><span class="info-label">Nomor WhatsApp</span><span class="info-val"><a href="https://wa.me/62${order.phone.replace(/^0/, '')}" target="_blank" style="color:#059669; font-weight:700;">${order.phone} 💬</a></span></div>
+            <div class="info-row"><span class="info-label">Tanggal Masuk</span><span class="info-val">${order.createdAt}</span></div>
+            <div class="info-row"><span class="info-label">Batas Target Deadline</span><span class="info-val" style="color:#dc2626;">${order.deadline}</span></div>
+            <div class="info-row"><span class="info-label">Kuota Tiket Revisi</span><span class="info-val">${order.revisionsUsed} dari ${order.revisionsMax} terpakai</span></div>
+          </div>
+
+          <div class="order-info-box">
+            <h5>🛠️ Konsultan Rekayasa Bertugas</h5>
+            <div class="info-row"><span class="info-label">Nama Konsultan</span><span class="info-val">${order.consultant || 'Belum Ditugaskan'}</span></div>
+            <div class="info-row"><span class="info-label">Tahapan Milestone</span><span class="info-val">Step ${order.progressStep} dari 5</span></div>
+            <div class="info-row"><span class="info-label">Progress Pengerjaan</span><span class="info-val">${order.progressStep * 20}%</span></div>
+            <div class="mini-progress-wrap" style="width:100%; margin-top:0.75rem;">
+              <div class="mini-progress-fill" style="width:${order.progressStep * 20}%;"></div>
+            </div>
+            ${!order.consultant ? `
+              <div style="margin-top:1rem;">
+                <button class="btn btn-outline btn-sm" style="width:100%;" onclick="window.adminAssignOrderAction('${order.id}')">
+                  Tugaskan Konsultan Sekarang
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="financial-split-card">
+          <h5 style="margin-bottom:0.75rem; font-size:0.95rem; font-weight:700; color:var(--text-heading); display:flex; justify-content:space-between; align-items:center;">
+            <span>💰 Rincian Finansial & Alokasi Komisi Escrow</span>
+            <span class="font-mono text-primary" style="font-size:1.1rem;">Rp ${order.totalCost.toLocaleString('id-ID')}</span>
+          </h5>
+
+          <div class="info-row"><span class="info-label">Termin 1: Uang Muka DP 50% (Escrow)</span><span class="info-val font-mono">Rp ${dpRequired.toLocaleString('id-ID')} (${order.dpPaid >= dpRequired ? '<span style="color:#059669;">Terbayar</span>' : '<span style="color:#b45309;">Belum Bayar</span>'})</span></div>
+          <div class="info-row"><span class="info-label">Termin 2: Sisa Pelunasan 50%</span><span class="info-val font-mono">Rp ${(order.totalCost - dpRequired).toLocaleString('id-ID')} (${order.balanceDue === 0 ? '<span style="color:#059669;">Lunas</span>' : '<span style="color:#b45309;">Tertahan</span>'})</span></div>
+          
+          <div class="split-bar-visual" title="Pembagian: 82% Hak Konsultan | 18% Komisi Platform">
+            <div class="split-bar-consultant" style="width:82%;"></div>
+            <div class="split-bar-platform" style="width:18%;"></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <span style="display:inline-block; width:10px; height:10px; background:var(--primary); border-radius:2px;"></span>
+              <span>Hak Bersih Mitra Konsultan (82%): <strong>Rp ${consultantNet.toLocaleString('id-ID')}</strong></span>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <span style="display:inline-block; width:10px; height:10px; background:var(--accent); border-radius:2px;"></span>
+              <span>Komisi Platform KerjaIN (18%): <strong style="color:var(--accent);">Rp ${platformFee.toLocaleString('id-ID')}</strong></span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (modalFooter) {
+      modalFooter.innerHTML = `
+        <div style="display:flex; gap:0.5rem; justify-content:space-between; width:100%; flex-wrap:wrap;">
+          <div>
+            ${order.escrowStatus === 'WAITING_DP' ? `
+              <button class="btn btn-primary btn-sm" onclick="window.adminVerifyDpAction('${order.id}')">
+                ✓ Verifikasi DP 50% (Masuk Escrow)
+              </button>
+            ` : ''}
+            ${order.escrowStatus === 'REVIEW_DRAFT' ? `
+              <button class="btn btn-accent btn-sm" onclick="window.adminReleaseEscrowAction('${order.id}')">
+                💸 Rilis Escrow ke Konsultan (Selesai)
+              </button>
+            ` : ''}
+          </div>
+          <button class="btn btn-outline btn-sm modal-close-btn" onclick="document.getElementById('modal-admin-order-detail').classList.remove('active')">
+            Tutup
+          </button>
+        </div>
+      `;
+    }
+
+    if (adminOrderDetailModal) adminOrderDetailModal.classList.add('active');
+  };
+
+  window.adminQuickNewOrder = function() {
+    const clientName = prompt('Nama Mahasiswa:', 'Alifia Rahman');
+    if (!clientName) return;
+    const univ = prompt('Universitas & Jurusan:', 'UNPAD (Fisika)');
+    const title = prompt('Judul Proyek STEM:', 'Sistem Telemetri LoRa Sensor Kualitas Udara');
+    const cost = parseInt(prompt('Estimasi Nilai Kontrak (Rp):', '600000')) || 600000;
+
+    const newOrder = {
+      id: 'KRJ-' + Math.floor(210 + Math.random() * 80),
+      clientName: clientName,
+      univ: univ || 'Institut Teknologi',
+      phone: '0812' + Math.floor(10000000 + Math.random() * 90000000),
+      title: title || 'Perancangan Sistem Rekayasa',
+      category: 'IoT & Telemetry',
+      software: 'Arduino C++, KiCAD',
+      totalCost: cost,
+      dpPaid: 0,
+      balanceDue: cost,
+      escrowStatus: 'WAITING_DP',
+      progressStep: 1,
+      consultant: 'Dian Pratama, S.T.',
+      deadline: '20 Nov 2026',
+      createdAt: '29 Okt 2026',
+      revisionsUsed: 0,
+      revisionsMax: 3
+    };
+
+    store.state.admin.orders.unshift(newOrder);
+    store.saveState();
+    showToast(`Order baru #${newOrder.id} (${newOrder.clientName}) berhasil didaftarkan ke Pipeline Admin!`, 'success');
   };
 
   // Close modals on backdrop click or close button

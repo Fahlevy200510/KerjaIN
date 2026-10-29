@@ -126,4 +126,35 @@ console.log('--- Menjalankan Self-Check Logika Inti KerjaIN ---');
   console.log('[PASS] Test 4: Simulasi Pelunasan Escrow & Buka Kunci File Master');
 }
 
-console.log('--- Semua 4 Pengujian Logika Lolos dengan Sempurna! ---');
+// Test 5: Siklus Order Admin & Verifikasi Escrow (FR-A02)
+{
+  const mockOrder = {
+    id: 'KRJ-205',
+    totalCost: 1200000,
+    dpPaid: 0,
+    balanceDue: 1200000,
+    escrowStatus: 'WAITING_DP',
+    progressStep: 1
+  };
+  
+  // Simulasi verifikasi DP 50% oleh Admin
+  const dpAmount = Math.round(mockOrder.totalCost * 0.5);
+  mockOrder.dpPaid = dpAmount;
+  mockOrder.balanceDue = mockOrder.totalCost - dpAmount;
+  mockOrder.escrowStatus = 'DP_VERIFIED';
+  mockOrder.progressStep = 3;
+
+  assert.strictEqual(mockOrder.dpPaid, 600000, 'DP 50% dari 1.2jt harus 600k');
+  assert.strictEqual(mockOrder.balanceDue, 600000, 'Sisa tagihan 600k');
+  assert.strictEqual(mockOrder.escrowStatus, 'DP_VERIFIED');
+
+  // Simulasi rilis escrow akhir saat mahasiswa puas
+  const commission = Math.round(mockOrder.totalCost * 0.18);
+  const consultantPayout = mockOrder.totalCost - commission;
+  assert.strictEqual(commission, 216000, 'Komisi platform 18% dari 1.2jt = 216k');
+  assert.strictEqual(consultantPayout, 984000, 'Hak bersih konsultan 82% = 984k');
+  console.log('[PASS] Test 5: Siklus Order Admin, Verifikasi DP & Pembagian Escrow Platform');
+}
+
+console.log('--- Semua 5 Pengujian Logika Lolos dengan Sempurna! ---');
+

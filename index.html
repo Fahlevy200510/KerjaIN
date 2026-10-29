@@ -816,78 +816,209 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
   <main id="view-admin" class="dashboard-wrapper" style="display:none;">
     <div class="section-header" style="text-align:left; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
       <div>
-        <span class="section-tag">Back-Office & Operasional</span>
-        <h3 class="section-title">Admin Dispatcher & Escrow Vault</h3>
-        <p class="section-subtitle">Monitoring pemetaan konsultan, transaksi rekening bersama, dan mediasi komplain.</p>
+        <span class="section-tag">Back-Office & Operasional KerjaIN</span>
+        <h3 class="section-title">Dashboard Admin & Escrow Pipeline</h3>
+        <p class="section-subtitle">Pemantauan order proyek mahasiswa, rekening bersama (escrow vault), penugasan konsultan, dan mediasi revisi.</p>
       </div>
-      <div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
         <button class="btn btn-outline btn-sm" onclick="window.openBusinessModal()" title="Buka Dokumen Analisis Finansial, Unit Economics & BEP">
-          📊 Buka Analisis Finansial & BEP
+          📊 Analisis Finansial & BEP
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="window.adminQuickNewOrder()" title="Simulasikan Input Order Baru">
+          + Simulasi Order Baru
         </button>
       </div>
     </div>
 
-    <!-- Admin Metric Cards -->
-    <div class="stats-cards-grid">
+    <!-- Admin Metric Cards (5 KPI Cards) -->
+    <div class="stats-cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom:1.75rem;">
       <div class="stat-metric-card">
-        <div class="metric-label">Dana Mengendap di Escrow Vault</div>
+        <div class="metric-label">Dana di Escrow Vault (Rekber)</div>
         <div class="metric-val text-primary" id="admin-escrow-vault">Rp 8.750.000</div>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Dana aman sebelum serah terima</span>
       </div>
       <div class="stat-metric-card">
         <div class="metric-label">Pendapatan Komisi Platform (18%)</div>
         <div class="metric-val text-success" id="admin-platform-rev">Rp 1.575.000</div>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Take-rate bersih KerjaIN</span>
       </div>
       <div class="stat-metric-card">
-        <div class="metric-label">Tingkat Komplain (Dispute Rate)</div>
-        <div class="metric-val" style="color:var(--success);">0.4% (Aman &lt; 5%)</div>
+        <div class="metric-label">Total Order Berjalan</div>
+        <div class="metric-val" id="admin-active-orders-count">5 Proyek</div>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Pipeline proyek STEM aktif</span>
       </div>
       <div class="stat-metric-card">
-        <div class="metric-label">Konsultan Aktif Berlisensi</div>
-        <div class="metric-val">32 Mitra</div>
+        <div class="metric-label">Ketepatan Waktu (On-Time)</div>
+        <div class="metric-val" style="color:#0284c7;">98.5%</div>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Rerata pengerjaan tepat target</span>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Tingkat Komplain (Dispute)</div>
+        <div class="metric-val" style="color:var(--success);">0.4%</div>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Batas toleransi aman &lt; 5%</span>
       </div>
     </div>
 
-    <!-- Project Dispatcher Table (FR-A01) -->
-    <div class="vault-card" style="margin-bottom:2rem;">
-      <div class="vault-header">
-        <h4>Project Dispatcher: Penugasan Konsultasi Gratis & Proyek Baru (FR-A01)</h4>
-      </div>
-
-      <div class="data-table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Lead ID</th>
-              <th>Nama Mahasiswa & Kampus</th>
-              <th>Topik Kendala</th>
-              <th>Jadwal Sesi</th>
-              <th>Aksi Penugasan</th>
-            </tr>
-          </thead>
-          <tbody id="admin-leads-table-body">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </div>
+    <!-- Admin Sub-Navigation Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-tab="orders" onclick="window.switchAdminTab('orders')">
+        <span>📦 Pipeline Order Proyek</span>
+        <span class="badge-pill" id="badge-count-orders">5</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="leads" onclick="window.switchAdminTab('leads')">
+        <span>🎯 Lead Konsultasi Evaluasi</span>
+        <span class="badge-pill" id="badge-count-leads">2</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="disputes" onclick="window.switchAdminTab('disputes')">
+        <span>⚖️ Mediasi & Garansi Hak</span>
+        <span class="badge-pill" id="badge-count-disputes">1</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="consultants" onclick="window.switchAdminTab('consultants')">
+        <span>👥 Database Mitra Konsultan</span>
+        <span class="badge-pill">3</span>
+      </button>
     </div>
 
-    <!-- Dispute Resolution Center (FR-A03) -->
-    <div class="vault-card">
-      <div class="vault-header">
-        <h4>Dispute Resolution Center & Garansi Hak (FR-A03)</h4>
-        <button class="btn btn-outline btn-sm" onclick="alert('Semua kasus mediasi saat ini telah terselesaikan secara damai.')">
-          Cek Log Mediasi
-        </button>
-      </div>
-      <div class="file-item-card">
-        <div class="file-info-group">
-          <div class="file-type-icon icon-cad">DSP</div>
-          <div>
-            <div class="file-name-title">Tiket #DSP-01 - Proyek #KRJ-199 (Farhan / ITS)</div>
-            <div class="file-meta-sub">Isu: Permintaan revisi dimensi di luar SoW awal &bull; Status: <strong>Mediasi Selesai (Disepakati Adendum Rp 100.000)</strong></div>
-          </div>
+    <!-- TAB PANEL 1: ORDER PIPELINE & ESCROW -->
+    <div id="admin-tab-orders" class="admin-tab-panel">
+      <!-- Toolbar Filters & Search -->
+      <div class="admin-toolbar">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="ALL" onclick="window.filterAdminOrders('ALL')">Semua Order</button>
+          <button class="filter-pill" data-filter="WAITING_DP" onclick="window.filterAdminOrders('WAITING_DP')">Menunggu DP 50%</button>
+          <button class="filter-pill" data-filter="DP_VERIFIED" onclick="window.filterAdminOrders('DP_VERIFIED')">Pengerjaan Escrow</button>
+          <button class="filter-pill" data-filter="REVIEW_DRAFT" onclick="window.filterAdminOrders('REVIEW_DRAFT')">Review Watermark</button>
+          <button class="filter-pill" data-filter="PAID_IN_FULL" onclick="window.filterAdminOrders('PAID_IN_FULL')">Selesai & Lunas</button>
         </div>
-        <span class="status-badge status-completed">Tuntas</span>
+        <div class="search-input-wrap">
+          <span class="search-icon-pos">🔍</span>
+          <input type="text" id="admin-order-search" placeholder="Cari ID order, nama, kampus..." oninput="window.searchAdminOrders(this.value)">
+        </div>
+      </div>
+
+      <!-- Orders Data Table -->
+      <div class="vault-card" style="margin-bottom:2rem;">
+        <div class="vault-header">
+          <h4>Daftar Pemantauan Order & Transaksi Rekening Bersama (Escrow)</h4>
+          <span class="text-muted" style="font-size:0.8rem;">Status sinkronisasi real-time</span>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID & Tanggal</th>
+                <th>Klien (Mahasiswa)</th>
+                <th>Judul Proyek & Bidang</th>
+                <th>Nilai Kontrak</th>
+                <th>Status Escrow</th>
+                <th>Progress</th>
+                <th>Konsultan</th>
+                <th style="text-align:center;">Aksi Admin</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table-body">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB PANEL 2: LEADS DISPATCHER -->
+    <div id="admin-tab-leads" class="admin-tab-panel" style="display:none;">
+      <div class="vault-card" style="margin-bottom:2rem;">
+        <div class="vault-header">
+          <h4>Project Dispatcher: Penugasan Konsultasi Evaluasi Gratis (FR-A01)</h4>
+          <span class="text-muted" style="font-size:0.8rem;">Lead masuk dari formulir beranda publik</span>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Lead ID</th>
+                <th>Nama Mahasiswa & Kampus</th>
+                <th>Topik Kendala</th>
+                <th>Jadwal Sesi</th>
+                <th>Status & Penugasan</th>
+              </tr>
+            </thead>
+            <tbody id="admin-leads-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB PANEL 3: DISPUTE & MEDIASI -->
+    <div id="admin-tab-disputes" class="admin-tab-panel" style="display:none;">
+      <div class="vault-card" style="margin-bottom:2rem;">
+        <div class="vault-header">
+          <h4>Dispute Resolution Center & Garansi Hak (FR-A03)</h4>
+          <button class="btn btn-outline btn-sm" onclick="alert('Semua kasus mediasi saat ini telah terselesaikan secara damai.')">
+            Cek Log Mediasi
+          </button>
+        </div>
+        <div class="file-item-card">
+          <div class="file-info-group">
+            <div class="file-type-icon icon-cad">DSP</div>
+            <div>
+              <div class="file-name-title">Tiket #DSP-01 - Proyek #KRJ-199 (Farhan / ITS)</div>
+              <div class="file-meta-sub">Isu: Permintaan revisi dimensi di luar SoW awal &bull; Status: <strong>Mediasi Selesai (Disepakati Adendum Rp 100.000)</strong></div>
+            </div>
+          </div>
+          <span class="status-badge status-completed">Tuntas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB PANEL 4: DATABASE KONSULTAN -->
+    <div id="admin-tab-consultants" class="admin-tab-panel" style="display:none;">
+      <div class="vault-card" style="margin-bottom:2rem;">
+        <div class="vault-header">
+          <h4>Database Mitra Konsultan Engineer STEM</h4>
+          <span class="text-muted" style="font-size:0.8rem;">Terverifikasi portofolio & sertifikasi</span>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nama Engineer</th>
+                <th>Spesialisasi & Toolchain</th>
+                <th>Rating</th>
+                <th>Proyek Selesai</th>
+                <th>Order Aktif</th>
+                <th>Status Ketersediaan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dian Pratama, S.T.</strong></td>
+                <td>Senior Mechatronics, SolidWorks, Arduino/ESP32, FEA</td>
+                <td><span style="color:#f59e0b; font-weight:700;">★ 4.95</span></td>
+                <td>48 Proyek</td>
+                <td>2 Proyek</td>
+                <td><span class="status-badge status-completed">Aktif & Siap Slot</span></td>
+              </tr>
+              <tr>
+                <td><strong>Hendra Kusuma, S.T.</strong></td>
+                <td>Electronics Engineer, Altium Designer, Multilayer PCB, CAN Bus</td>
+                <td><span style="color:#f59e0b; font-weight:700;">★ 4.92</span></td>
+                <td>35 Proyek</td>
+                <td>1 Proyek</td>
+                <td><span class="status-badge status-completed">Aktif & Siap Slot</span></td>
+              </tr>
+              <tr>
+                <td><strong>Bayu Wicaksono, S.T.</strong></td>
+                <td>Mechanical Design & Otomasi Pabrik, Inventor, Fusion 360</td>
+                <td><span style="color:#f59e0b; font-weight:700;">★ 4.88</span></td>
+                <td>29 Proyek</td>
+                <td>1 Proyek</td>
+                <td><span class="status-badge status-warning">Slot Terbatas</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </main>
@@ -1133,6 +1264,25 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
     </div>
   </div>
 
+  <!-- 6. Modal Admin Order Detail & Financial Split -->
+  <div class="modal-backdrop" id="modal-admin-order-detail">
+    <div class="modal-window" style="max-width:760px;">
+      <div class="modal-header">
+        <div>
+          <span class="brand-tag" style="margin-bottom:0.25rem; display:inline-block;">Manajemen Order & Escrow</span>
+          <h3 id="admin-modal-order-title">Detail Order Proyek</h3>
+        </div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="admin-modal-order-content">
+        <!-- Dynamically populated by app.js -->
+      </div>
+      <div class="modal-footer" id="admin-modal-order-footer">
+        <button class="btn btn-outline btn-sm modal-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -1167,6 +1317,7 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
           <li><a href="javascript:void(0)" onclick="alert('Sistem Escrow KerjaIN melindungi hak mahasiswa dan hak konsultan secara berimbang.')">Sistem Escrow Terjamin</a></li>
           <li><a href="javascript:void(0)" onclick="alert('Perjanjian Kerahasiaan (NDA): Topik skripsi dan file rancangan dijamin 100% rahasia.')">Kerahasiaan Proyek (NDA)</a></li>
           <li><a href="javascript:void(0)" onclick="alert('Garansi Revisi: 3x jatah revisi gratis untuk setiap quotation yang disepakati.')">Kebijakan Revisi</a></li>
+          <li><a href="javascript:void(0)" onclick="window.kerjainStore.setRole('admin'); window.scrollTo({top:0, behavior:'smooth'});" style="color:var(--accent);">⚡ Dashboard Admin (Monitoring Order)</a></li>
         </ul>
       </div>
 

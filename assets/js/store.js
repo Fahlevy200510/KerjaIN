@@ -150,6 +150,104 @@ const INITIAL_STATE = {
         issue: 'Permintaan revisi ke-4 tanpa biaya adendum',
         status: 'Mediasi Tercapai (Klien tambah add-on Rp 100k)'
       }
+    ],
+    // Pipeline Order Proyek Masuk & Berjalan (FR-A02)
+    orders: [
+      {
+        id: 'KRJ-204',
+        clientName: 'Bambang Pratama',
+        univ: 'UI (Teknik Mesin)',
+        phone: '081298765432',
+        title: 'Mekanik & Kontrol Otomasi Gripper Robotika',
+        category: 'Mechanical 3D & IoT',
+        software: 'SolidWorks 2023, Arduino C++',
+        totalCost: 700000,
+        dpPaid: 350000,
+        balanceDue: 350000,
+        escrowStatus: 'DP_VERIFIED', // 'WAITING_DP' | 'DP_VERIFIED' | 'REVIEW_DRAFT' | 'PAID_IN_FULL'
+        progressStep: 3,
+        consultant: 'Dian Pratama, S.T.',
+        deadline: '5 Nov 2026',
+        createdAt: '26 Okt 2026',
+        revisionsUsed: 1,
+        revisionsMax: 3
+      },
+      {
+        id: 'KRJ-205',
+        clientName: 'Sarah Melinda',
+        univ: 'ITB (Teknik Elektro)',
+        phone: '085712349876',
+        title: 'PCB BMS 4S LiFePO4 & Telemetri CAN Bus',
+        category: 'Electronics & PCB Layout',
+        software: 'Altium Designer 24',
+        totalCost: 1200000,
+        dpPaid: 0,
+        balanceDue: 1200000,
+        escrowStatus: 'WAITING_DP',
+        progressStep: 1,
+        consultant: 'Hendra Kusuma, S.T.',
+        deadline: '12 Nov 2026',
+        createdAt: '28 Okt 2026',
+        revisionsUsed: 0,
+        revisionsMax: 3
+      },
+      {
+        id: 'KRJ-206',
+        clientName: 'Daffa Raihan',
+        univ: 'ITS (Teknik Fisika)',
+        phone: '081345678912',
+        title: 'Firmware Mini PLC ESP32 & Kalibrasi Sensor PT100',
+        category: 'Firmware & Industrial IoT',
+        software: 'ESP-IDF, FreeRTOS',
+        totalCost: 450000,
+        dpPaid: 450000,
+        balanceDue: 0,
+        escrowStatus: 'PAID_IN_FULL',
+        progressStep: 5,
+        consultant: 'Dian Pratama, S.T.',
+        deadline: '28 Okt 2026',
+        createdAt: '20 Okt 2026',
+        revisionsUsed: 2,
+        revisionsMax: 3
+      },
+      {
+        id: 'KRJ-207',
+        clientName: 'Kevin Sanjaya',
+        univ: 'Undip (Teknik Industri)',
+        phone: '082212345678',
+        title: 'Desain 3D Mini Conveyor Sortir Otomatis SolidWorks',
+        category: 'Mechanical 3D & Automation',
+        software: 'SolidWorks 2022',
+        totalCost: 850000,
+        dpPaid: 425000,
+        balanceDue: 425000,
+        escrowStatus: 'REVIEW_DRAFT',
+        progressStep: 4,
+        consultant: 'Bayu Wicaksono, S.T.',
+        deadline: '8 Nov 2026',
+        createdAt: '24 Okt 2026',
+        revisionsUsed: 1,
+        revisionsMax: 3
+      },
+      {
+        id: 'KRJ-208',
+        clientName: 'Nabila Putri',
+        univ: 'UGM (Teknik Biomedis)',
+        phone: '081987654321',
+        title: 'Skematik EKG 3-Lead Analog Front End Filter',
+        category: 'Electronics & Instrumentation',
+        software: 'Eagle PCB, LTspice',
+        totalCost: 650000,
+        dpPaid: 0,
+        balanceDue: 650000,
+        escrowStatus: 'WAITING_ASSIGNMENT',
+        progressStep: 1,
+        consultant: 'Belum Ditugaskan',
+        deadline: '15 Nov 2026',
+        createdAt: '29 Okt 2026',
+        revisionsUsed: 0,
+        revisionsMax: 3
+      }
     ]
   }
 };
@@ -164,7 +262,13 @@ class KerjaINStore {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Defensive backfill for orders if missing in existing local session
+        if (!parsed.admin || !parsed.admin.orders) {
+          parsed.admin = parsed.admin || {};
+          parsed.admin.orders = JSON.parse(JSON.stringify(INITIAL_STATE.admin.orders));
+        }
+        return parsed;
       }
     } catch (e) {
       console.warn('localStorage error, using initial state', e);
@@ -286,6 +390,15 @@ class KerjaINStore {
     this.state.admin.totalEscrowVault += balanceAmount;
     this.state.admin.platformRevenue += Math.round(balanceAmount * 0.18);
 
+    // Sync in admin orders table
+    const targetOrder = this.state.admin.orders.find(o => o.id === 'KRJ-204');
+    if (targetOrder) {
+      targetOrder.escrowStatus = 'PAID_IN_FULL';
+      targetOrder.progressStep = 5;
+      targetOrder.balanceDue = 0;
+      targetOrder.dpPaid = targetOrder.totalCost;
+    }
+
     this.saveState();
     return true;
   }
@@ -315,6 +428,63 @@ class KerjaINStore {
       this.state.project.quotation.scopeOfWork = sowItems;
     }
     this.saveState();
+  }
+
+  // Action: Admin Verify DP 50% (FR-A02)
+  adminVerifyDp(orderId) {
+    const order = this.state.admin.orders.find(o => o.id === orderId);
+    if (!order) return false;
+
+    const dpVal = Math.round(order.totalCost * 0.5);
+    order.dpPaid = dpVal;
+    order.balanceDue = order.totalCost - dpVal;
+    order.escrowStatus = 'DP_VERIFIED';
+    order.progressStep = 3; // Lanjut ke pengerjaan
+    this.state.admin.totalEscrowVault += dpVal;
+
+    // Sync client active project if same
+    if (order.id === 'KRJ-204') {
+      this.state.project.paymentStatus = 'DP_PAID';
+      this.state.project.milestoneStep = 3;
+    }
+
+    this.saveState();
+    return true;
+  }
+
+  // Action: Admin Release Escrow to Consultant (FR-A02)
+  adminReleaseEscrow(orderId) {
+    const order = this.state.admin.orders.find(o => o.id === orderId);
+    if (!order) return false;
+
+    order.escrowStatus = 'PAID_IN_FULL';
+    order.progressStep = 5;
+    order.balanceDue = 0;
+    order.dpPaid = order.totalCost;
+
+    const commission = Math.round(order.totalCost * 0.18);
+    this.state.admin.platformRevenue += commission;
+
+    // Sync client active project if same
+    if (order.id === 'KRJ-204') {
+      this.processPayment();
+    } else {
+      this.saveState();
+    }
+    return true;
+  }
+
+  // Action: Admin Assign Consultant to Order (FR-A01)
+  adminAssignConsultant(orderId, consultantName = 'Dian Pratama, S.T.') {
+    const order = this.state.admin.orders.find(o => o.id === orderId);
+    if (!order) return false;
+
+    order.consultant = consultantName;
+    if (order.escrowStatus === 'WAITING_ASSIGNMENT') {
+      order.escrowStatus = 'WAITING_DP';
+    }
+    this.saveState();
+    return true;
   }
 
   // Reset demo data to initial PRD specs
