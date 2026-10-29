@@ -1,0 +1,21 @@
+{
+  "name": "kerjain-platform",
+  "version": "1.0.0",
+  "description": "KerjaIN - Platform Asistensi Rekayasa & Konsultasi Teknis STEM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_kerjain_store.js"
+  },
+  "keywords": [
+    "engineering",
+    "stem",
+    "cad",
+    "pcb",
+    "iot",
+    "marketplace",
+    "indonesia"
+  ],
+  "author": "KerjaIN",
+  "license": "ISC"
+}

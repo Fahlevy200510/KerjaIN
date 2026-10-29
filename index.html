@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KerjaIN - Platform Konsultasi & Asistensi Proyek Teknik (STEM)</title>
+  <meta name="description" content="Layanan konsultasi, bimbingan teknis, dan asistensi proyek kuliah STEM (Desain 3D SolidWorks, Skematik & PCB, Pemrograman IoT/Otomasi) dengan sistem keamanan escrow dan proteksi file kerja.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e40af'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+</head>
+<body class="bg-tech-grid">
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand" onclick="window.kerjainStore.setRole('public')">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Kerja<span>IN</span></h1>
+          <span class="brand-tag">STEM Engineering Hub</span>
+        </div>
+      </div>
+
+      <!-- Public Links -->
+      <ul class="nav-links">
+        <li><a class="nav-link" href="#layanan">Layanan</a></li>
+        <li><a class="nav-link" href="#alur-kerja">Cara Kerja</a></li>
+        <li><a class="nav-link" href="#kalkulator">Estimasi Biaya</a></li>
+        <li><a class="nav-link" href="#portofolio">Portofolio</a></li>
+      </ul>
+
+      <!-- Role Switcher (Simulates the 3 User Personas in PRD §2) -->
+      <div class="role-switcher">
+        <button class="role-btn active" data-role="public" title="Halaman Utama & Booking">
+          <span>🌐 Publik</span>
+        </button>
+        <button class="role-btn" data-role="client" title="Dashboard Mahasiswa (Workspace & Brankas)">
+          <span>🎓 Mahasiswa</span>
+        </button>
+        <button class="role-btn" data-role="engineer" title="Dashboard Konsultan Engineer">
+          <span>🛠️ Konsultan</span>
+        </button>
+        <button class="role-btn" data-role="admin" title="Back-Office & Dispatcher Admin">
+          <span>⚡ Admin</span>
+        </button>
+      </div>
+
+      <div class="nav-actions">
+        <a href="#booking-section" class="btn btn-accent btn-sm">
+          Konsultasi Gratis
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 1. PUBLIC VIEW (Landing Page & Booking)    -->
+  <!-- ========================================== -->
+  <main id="view-public">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-indicator"></span>
+            Layanan Konsultasi & Asistensi Teknis Rekayasa (STEM)
+          </div>
+          <h2 class="hero-title">
+            Kendala Teknis pada Proyek Kuliah atau <span class="highlight">Tugas Akhir Rekayasa?</span>
+          </h2>
+          <p class="hero-description">
+            Dapatkan asistensi teknis terstruktur untuk pemodelan CAD 3D, perancangan skematik & layout PCB, hingga pengembangan firmware mikrokontroler. 
+            Setiap sesi dirancang untuk membantu mahasiswa memahami konsep dasar dan metodologi teknis secara mendalam, didukung sistem pembayaran bertahap (<em>escrow</em>) serta perlindungan kerahasiaan berkas kerja.
+          </p>
+          <div class="hero-actions">
+            <a href="#booking-section" class="btn btn-accent btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 2v4M8 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+              Jadwalkan Konsultasi Teknis (15 Menit)
+            </a>
+            <a href="#portofolio" class="btn btn-outline btn-lg">
+              Dokumentasi Proyek
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <h4>1.200+</h4>
+              <p>Proyek Terealisasi</p>
+            </div>
+            <div class="stat-item">
+              <h4>98.5%</h4>
+              <p>Ketepatan Waktu (On-Time)</p>
+            </div>
+            <div class="stat-item">
+              <h4>100%</h4>
+              <p>Garansi Berkas Master Asli</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Technical Visual Showcase (Split CAD + PCB + Code) -->
+        <div class="hero-visual-card">
+          <div class="visual-header">
+            <div class="mac-dots">
+              <span class="mac-dot dot-red"></span>
+              <span class="mac-dot dot-yellow"></span>
+              <span class="mac-dot dot-green"></span>
+            </div>
+            <div class="visual-tabs">
+              <button class="v-tab-btn active" data-tab="cad">
+                <span>SolidWorks 3D</span>
+              </button>
+              <button class="v-tab-btn" data-tab="pcb">
+                <span>Altium PCB</span>
+              </button>
+              <button class="v-tab-btn" data-tab="code">
+                <span>C++ / Embedded</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="visual-display-content">
+            <!-- CAD Assembly Panel -->
+            <div class="visual-panel active" id="v-panel-cad">
+              <img src="assets/img/cad_assembly.jpg" alt="SolidWorks 3D Exploded Assembly Render">
+              <div class="visual-overlay-badge font-mono">
+                <span class="pulse-indicator"></span>
+                <span>Gripper_Robotic_Assembly.SLDPRT [FEA Verified]</span>
+              </div>
+            </div>
+
+            <!-- PCB Panel -->
+            <div class="visual-panel" id="v-panel-pcb">
+              <img src="assets/img/pcb_schematic.jpg" alt="Altium PCB 3D Layout">
+              <div class="visual-overlay-badge font-mono">
+                <span class="pulse-indicator"></span>
+                <span>ESP32_Node_Telemetry_2Layer.PCB [Gerber Ready]</span>
+              </div>
+            </div>
+
+            <!-- Code Panel -->
+            <div class="visual-panel" id="v-panel-code">
+              <div class="code-panel">
+<span class="comm">// KerjaIN Automation Kernel v2.4</span>
+<span class="kw">#include</span> <span class="str">&lt;WiFi.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ModbusMaster.h&gt;</span>
+
+<span class="kw">const int</span> STEP_PIN = <span class="str">18</span>;
+<span class="kw">const int</span> DIR_PIN  = <span class="str">19</span>;
+ModbusMaster node;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="str">115200</span>);
+  <span class="fn">pinMode</span>(STEP_PIN, OUTPUT);
+  <span class="fn">pinMode</span>(DIR_PIN, OUTPUT);
+  node.<span class="fn">begin</span>(<span class="str">1</span>, Serial2);
+  Serial.<span class="fn">println</span>(<span class="str">"System Ready: Stepper & Telemetry Armed"</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="comm">// Closed-loop PID & Gripper Actuation</span>
+  <span class="fn">readEncoderFeedback</span>();
+  <span class="fn">modbusTelemetryStream</span>();
+  <span class="fn">delay</span>(<span class="str">10</span>);
+}
+              </div>
+              <div class="visual-overlay-badge font-mono">
+                <span class="pulse-indicator"></span>
+                <span>Firmware_Control_ESP32.INO [Compiled 0 Errors]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.2 Layanan Inti (§1.2 & FR-C01) -->
+    <section class="section" id="layanan">
+      <div class="section-header">
+        <span class="section-tag">Disiplin Rekayasa</span>
+        <h3 class="section-title">Layanan Asistensi Teknis</h3>
+        <p class="section-subtitle">
+          Pendampingan intensif oleh praktisi industri dan asisten laboratorium terverifikasi pada bidang rekayasa mekanikal, elektronika, dan sistem otomasi.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <!-- 1. Mechanical & 3D Design -->
+        <div class="service-card">
+          <div class="service-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <h3>Desain Mekanikal & Simulasi 3D</h3>
+          <p>
+            Pemodelan 3D komponen dan perakitan (<em>assembly</em>), analisis elemen hingga (FEA), simulasi dinamika fluida (CFD), serta penyusunan gambar teknik 2D standar manufaktur.
+          </p>
+          <div class="service-tech-tags">
+            <span class="tech-tag">SolidWorks</span>
+            <span class="tech-tag">AutoCAD</span>
+            <span class="tech-tag">Fusion 360</span>
+            <span class="tech-tag">Inventor</span>
+            <span class="tech-tag">ANSYS FEA</span>
+          </div>
+          <div class="service-card-footer">
+            <span class="service-price-hint">Mulai <strong>Rp 95.000</strong></span>
+            <a href="#kalkulator" class="btn btn-outline btn-sm">Estimasi Biaya</a>
+          </div>
+        </div>
+
+        <!-- 2. Electrical & Schematic Diagram -->
+        <div class="service-card">
+          <div class="service-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          </div>
+          <h3>Perancangan Skematik & Layout PCB</h3>
+          <p>
+            Perancangan skematik rangkaian elektronika, penataan tata letak (<em>layout</em>) PCB multi-layer, routing sinyal impedansi terkontrol, serta penyiapan berkas Gerber siap fabrikasi.
+          </p>
+          <div class="service-tech-tags">
+            <span class="tech-tag">Altium Designer</span>
+            <span class="tech-tag">Autodesk Eagle</span>
+            <span class="tech-tag">EasyEDA</span>
+            <span class="tech-tag">Proteus</span>
+            <span class="tech-tag">Gerber JLCPCB</span>
+          </div>
+          <div class="service-card-footer">
+            <span class="service-price-hint">Mulai <strong>Rp 85.000</strong></span>
+            <a href="#kalkulator" class="btn btn-outline btn-sm">Estimasi Biaya</a>
+          </div>
+        </div>
+
+        <!-- 3. Programming & Automation/IoT -->
+        <div class="service-card">
+          <div class="service-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <h3>Sistem Tertanam, PLC & Otomasi IoT</h3>
+          <p>
+            Pengembangan <em>firmware</em> mikrokontroler (<em>closed-loop control</em>), kalibrasi sensor industri, integrasi PLC dan HMI/SCADA, hingga perancangan antarmuka telemetri data berbasis jaringan.
+          </p>
+          <div class="service-tech-tags">
+            <span class="tech-tag">Arduino / C++</span>
+            <span class="tech-tag">ESP32 / STM32</span>
+            <span class="tech-tag">Siemens PLC</span>
+            <span class="tech-tag">Raspberry Pi</span>
+            <span class="tech-tag">Python & MQTT</span>
+          </div>
+          <div class="service-card-footer">
+            <span class="service-price-hint">Mulai <strong>Rp 95.000</strong></span>
+            <a href="#kalkulator" class="btn btn-outline btn-sm">Estimasi Biaya</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alur Kerja Transparan (§4) -->
+    <section class="section" id="alur-kerja" style="background:#ffffff; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+      <div class="section-header">
+        <span class="section-tag">Metodologi Kerja</span>
+        <h3 class="section-title">Tahapan Kerja Sama Terstruktur</h3>
+        <p class="section-subtitle">
+          Dirancang untuk memastikan kepastian ruang lingkup, keamanan transaksi, dan transparansi progres di setiap tahapan pengerjaan.
+        </p>
+      </div>
+
+      <div class="workflow-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h4>Konsultasi Teknis Awal</h4>
+          <p>Sesi 15–30 menit via Google Meet untuk evaluasi jurnal acuan, sketsa desain, dan analisis kelayakan teknis bersama mentor.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h4>Penerbitan Digital Quotation</h4>
+          <p>Penyusunan dokumen resmi yang memuat rincian <em>Scope of Work</em>, spesifikasi <em>deliverables</em>, tenggat waktu, dan kuota revisi.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h4>Termin DP 50% & Review Progres</h4>
+          <p>Penyetoran dana ke rekening bersama (<em>escrow</em>). Klien meninjau progres berkala melalui visualisasi 3D atau skematik ber-<em>watermark</em>.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h4>Pelunasan & Serah Terima Master</h4>
+          <p>Setelah seluruh luaran disetujui, klien menyelesaikan pelunasan termin 2 untuk membuka akses pengunduhan berkas sumber asli (.SLDPRT, .STEP, .INO).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kalkulator Estimasi Biaya Dasar (FR-C01) -->
+    <section class="section" id="kalkulator">
+      <div class="section-header">
+        <span class="section-tag">Simulasi Biaya Mandiri</span>
+        <h3 class="section-title">Kalkulator Estimasi Biaya Proyek</h3>
+        <p class="section-subtitle">
+          Pilih parameter bidang teknis dan tingkat kompleksitas untuk memperoleh proyeksi anggaran dasar secara transparan.
+        </p>
+      </div>
+
+      <div class="calc-wrapper">
+        <div class="calc-form">
+          <!-- 1. Bidang -->
+          <div class="calc-form-group">
+            <label>1. Pilih Bidang Rekayasa</label>
+            <div class="calc-options-grid">
+              <button type="button" class="calc-opt-btn active" data-calc-discipline="3d_cad">
+                3D CAD & Mekanik
+              </button>
+              <button type="button" class="calc-opt-btn" data-calc-discipline="pcb_schematic">
+                Skematik & PCB
+              </button>
+              <button type="button" class="calc-opt-btn" data-calc-discipline="iot_programming">
+                Program & IoT
+              </button>
+              <button type="button" class="calc-opt-btn" data-calc-discipline="multidiscipline">
+                Multidisiplin (Mechatronics)
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Tingkat Kompleksitas -->
+          <div class="calc-form-group">
+            <label>2. Tingkat Kompleksitas Proyek</label>
+            <div class="calc-options-grid">
+              <button type="button" class="calc-opt-btn" data-calc-tier="tugas_praktikum">
+                Tugas Praktikum / Modul Kecil
+              </button>
+              <button type="button" class="calc-opt-btn active" data-calc-tier="tugas_besar">
+                Tugas Besar (Tubes Semester)
+              </button>
+              <button type="button" class="calc-opt-btn" data-calc-tier="pkm">
+                PKM / Lomba Robotika
+              </button>
+              <button type="button" class="calc-opt-btn" data-calc-tier="skripsi">
+                Prototipe Skripsi / TA
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Urgensi -->
+          <div class="calc-form-group">
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="calc-urgency" style="width:18px; height:18px;">
+              <span><strong>Prioritas Kilat (&lt; 3 Hari)</strong> (+40% alokasi lembur konsultan)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Output Card -->
+        <div class="calc-output-card">
+          <div class="calc-est-label">Estimasi Kisaran Biaya</div>
+          <div class="calc-est-price" id="calc-price-val">Rp 150.000 - 220.000</div>
+
+          <div class="calc-breakdown">
+            <div class="breakdown-row">
+              <span>Sistem Pembayaran:</span>
+              <strong style="color:#fff;">Bertahap (Escrow 2 Termin)</strong>
+            </div>
+            <div class="breakdown-row">
+              <span>DP 50% untuk Mulai:</span>
+              <strong id="calc-dp-val" class="font-mono" style="color:#38bdf8;">Rp 90.000</strong>
+            </div>
+            <div class="breakdown-row">
+              <span>Pelunasan 50% saat Serah Terima:</span>
+              <strong id="calc-final-val" class="font-mono" style="color:#34d399;">Rp 90.000</strong>
+            </div>
+            <div class="breakdown-row">
+              <span>Garansi Revisi:</span>
+              <strong style="color:#fbbf24;">3x Kuota Revisi Tertulis</strong>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.08); padding:0.65rem 0.85rem; border-radius:var(--radius-sm); margin-bottom:1.25rem; font-size:0.75rem; color:#cbd5e1; line-height:1.45;">
+            👥 <strong>Simulasi Patungan Kelompok:</strong> Untuk Tugas Besar (3–4 orang), biaya per anggota rata-rata hanya <strong>Rp 40.000 – Rp 65.000</strong>.
+          </div>
+
+          <a href="#booking-section" class="btn btn-accent btn-lg" style="width:100%; text-align:center;">
+            Jadwalkan Konsultasi Teknis Gratis
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase Portofolio & Studi Kasus (§5) -->
+    <section class="section" id="portofolio">
+      <div class="section-header">
+        <span class="section-tag">Hasil Kerja Terverifikasi</span>
+        <h3 class="section-title">Galeri Portofolio & Studi Kasus</h3>
+        <p class="section-subtitle">
+          Beberapa proyek nyata mahasiswa dan tim robotika yang telah sukses disidangkan dan diujicobakan di laboratorium.
+        </p>
+      </div>
+
+      <div class="showcase-grid">
+        <!-- Case 1 -->
+        <div class="showcase-card">
+          <div class="showcase-img-wrap">
+            <img src="assets/img/cad_assembly.jpg" alt="Studi Kasus 3D Assembly Gripper">
+            <span class="showcase-category-badge">Mechanical 3D & FEA</span>
+          </div>
+          <div class="showcase-body">
+            <div class="showcase-client-tag">Klien: Mahasiswa Teknik Mesin (UI)</div>
+            <h4>Desain Gripper Robotika Bawah Air 3-Finger</h4>
+            <p>
+              Pemodelan 3D SolidWorks, perancangan transmisi gigi internal, dan simulasi tegangan von Mises pada material Al 6061-T6 untuk kedalaman 15 meter.
+            </p>
+            <div class="showcase-specs-list">
+              <span class="spec-pill">SolidWorks 2024</span>
+              <span class="spec-pill">FEA Stress Mesh</span>
+              <span class="spec-pill">Tolerance ISO 2768</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="window.openPreviewModal('Gripper Robotika Bawah Air', 'assets/img/cad_assembly.jpg', 'PREVIEW HASIL KERJA')">
+              Lihat Detail Model 3D
+            </button>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div class="showcase-card">
+          <div class="showcase-img-wrap">
+            <img src="assets/img/pcb_schematic.jpg" alt="Studi Kasus PCB ESP32 Node">
+            <span class="showcase-category-badge">PCB & Hardware</span>
+          </div>
+          <div class="showcase-body">
+            <div class="showcase-client-tag">Klien: Mahasiswa Teknik Komputer (ITB)</div>
+            <h4>ESP32 Multi-Sensor Telemetri 2-Layer Board</h4>
+            <p>
+              Desain skematik & routing PCB compact dengan filtering power supply, proteksi ESD, antenna keep-out zone ESP32-WROOM, dan konektor Qwiic I2C.
+            </p>
+            <div class="showcase-specs-list">
+              <span class="spec-pill">Altium Designer</span>
+              <span class="spec-pill">2-Layer ENIG Gold</span>
+              <span class="spec-pill">Gerber DFM Passed</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="window.openPreviewModal('ESP32 Telemetry Board Altium', 'assets/img/pcb_schematic.jpg', 'PREVIEW SKEMATIK')">
+              Lihat Detail Skematik
+            </button>
+          </div>
+        </div>
+
+        <!-- Case 3 -->
+        <div class="showcase-card">
+          <div class="showcase-img-wrap">
+            <img src="assets/img/iot_prototype.jpg" alt="Studi Kasus Mini PLC Otomasi">
+            <span class="showcase-category-badge">Otomasi & PLC/IoT</span>
+          </div>
+          <div class="showcase-body">
+            <div class="showcase-client-tag">Klien: Tim Tugas Akhir Otomasi (ITS)</div>
+            <h4>Prototipe Smart Controller Mini PLC & Modbus</h4>
+            <p>
+              Integrasi mikrokontroler dengan PLC Siemens, pengawatan terminal optocoupler terisolasi, display OLED status telemetri, dan komunikasi Modbus RS485.
+            </p>
+            <div class="showcase-specs-list">
+              <span class="spec-pill">Siemens S7 Logic</span>
+              <span class="spec-pill">Modbus RS485</span>
+              <span class="spec-pill">OLED Telemetry</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="window.openPreviewModal('Smart Mini PLC Prototype', 'assets/img/iot_prototype.jpg', 'PREVIEW INSTRUMENTASI')">
+              Lihat Detail Instrumentasi
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Direct Booking Konsultasi Gratis Widget (§3.1 FR-C02 & §6.1) -->
+    <section class="booking-section" id="booking-section">
+      <div class="booking-container">
+        <div class="booking-banner">
+          <h3>Pengajuan Sesi Konsultasi Teknis (15 Menit)</h3>
+          <p>Diskusikan kendala rancangan, analisis kelayakan alat, dan ruang lingkup proyek tugas akhir Anda bersama mentor spesialis KerjaIN.</p>
+        </div>
+
+        <form class="booking-form" id="booking-form">
+          <div class="quota-guarantee-note">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <strong>Alokasi 1 Sesi Konsultasi Evaluasi per Topik Proyek:</strong> Fasilitas diskusi awal tanpa kewajiban komitmen finansial sebelum dokumen penawaran resmi diterbitkan.
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="book-name">Nama Lengkap Mahasiswa *</label>
+              <input type="text" id="book-name" class="form-control" placeholder="Nama Lengkap" required value="Bambang Pratama">
+            </div>
+            <div class="form-group">
+              <label for="book-univ">Institusi & Program Studi *</label>
+              <input type="text" id="book-univ" class="form-control" placeholder="Contoh: Universitas Indonesia - Teknik Mesin" required value="Universitas Indonesia - Teknik Mesin">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="book-phone">Nomor Kontak WhatsApp *</label>
+              <input type="tel" id="book-phone" class="form-control" placeholder="Contoh: 081234567890" required value="081298765432">
+            </div>
+            <div class="form-group">
+              <label for="book-category">Kategori Disiplin Teknis *</label>
+              <select id="book-category" class="form-control">
+                <option value="3D Mechanical & CAD SolidWorks">3D Mechanical CAD (SolidWorks/Inventor/FEA)</option>
+                <option value="Skematik & PCB Design">Skematik & Layout PCB (Altium/Eagle)</option>
+                <option value="Pemrograman Mikrokontroler/IoT">Pemrograman Mikrokontroler & Otomasi IoT</option>
+                <option value="Multidisiplin Mechatronics">Multidisiplin (Mekanik + PCB + Kode Program)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="book-date">Tanggal Rencana Sesi *</label>
+              <input type="date" id="book-date" class="form-control" required value="2026-11-02">
+            </div>
+            <div class="form-group">
+              <label for="book-time">Pilihan Slot Waktu *</label>
+              <select id="book-time" class="form-control">
+                <option value="10:00 - 10:30 WIB">10:00 - 10:30 WIB (Pagi)</option>
+                <option value="13:30 - 14:00 WIB">13:30 - 14:00 WIB (Siang)</option>
+                <option value="16:00 - 16:30 WIB">16:00 - 16:30 WIB (Sore)</option>
+                <option value="19:30 - 20:00 WIB">19:30 - 20:00 WIB (Malam)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="book-notes">Deskripsi Singkat Kendala / Target Prototipe</label>
+            <textarea id="book-notes" class="form-control" rows="3" placeholder="Uraikan parameter teknis atau spesifikasi yang membutuhkan bimbingan...">Membutuhkan asistensi optimasi dimensi transmisi gripper 3-finger dan integrasi kendali motor stepper berbasis ESP32.</textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Unggah Berkas Acuan / Sketsa Rancangan (Opsional)</label>
+            <div class="file-dropzone" onclick="document.getElementById('dummy-file-input').click()">
+              <input type="file" id="dummy-file-input" style="display:none;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin:0 auto 0.5rem; color:var(--text-muted);"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <p style="font-size:0.85rem; color:var(--text-main); font-weight:600;">Pilih atau seret berkas PDF / gambar sketsa rancangan</p>
+              <p style="font-size:0.75rem; color:var(--text-muted);">Mendukung format JPG, PNG, PDF hingga kapasitas 50 MB</p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-accent btn-lg" style="width:100%; margin-top:1rem;">
+            Konfirmasi Jadwal Konsultasi Teknis
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 2. CLIENT DASHBOARD VIEW (§3.1 & §6.2)    -->
+  <!-- ========================================== -->
+  <main id="view-client" class="dashboard-wrapper" style="display:none;">
+    <div class="workspace-layout">
+      <!-- Sidebar Nav -->
+      <aside class="workspace-sidebar">
+        <div class="client-mini-profile">
+          <div class="avatar-circle">BP</div>
+          <div>
+            <h4>Bambang Pratama</h4>
+            <p>Teknik Mesin - UI</p>
+          </div>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><button class="side-item-btn active"><span>📂 Proyek Aktif</span></button></li>
+          <li><button class="side-item-btn" onclick="alert('Daftar Konsultasi: Sesi berikutnya terjadwal via Google Meet.')"><span>📅 Konsultasi Saya</span></button></li>
+          <li><button class="side-item-btn" onclick="window.triggerPaymentModal()"><span>💳 Tagihan & Escrow</span></button></li>
+          <li><button class="side-item-btn" onclick="window.triggerQuotationModal()"><span>📄 Dokumen Penawaran</span></button></li>
+        </ul>
+
+        <div class="sidebar-help-box">
+          <p>Punya pertanyaan teknis mendesak?</p>
+          <a href="https://wa.me/628123456789" target="_blank" class="btn btn-outline btn-sm" style="width:100%;">
+            Chat Admin WA
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Workspace Detail -->
+      <div class="workspace-content">
+        <!-- Project Title Header -->
+        <div class="project-header-card">
+          <div>
+            <span class="project-id-badge">PROYEK: #KRJ-204</span>
+            <h3 class="project-header-title">Desain Mekanik & Kontrol Otomasi Gripper Robotika</h3>
+            <div class="project-header-meta">
+              <span>Konsultan: <strong>Dian Pratama, S.T.</strong></span>
+              <span>Deadline: <strong>5 November 2026</strong></span>
+            </div>
+          </div>
+          <div>
+            <span class="status-badge status-active" id="ws-project-status">
+              DALAM PENGERJAAN - TAHAP 2
+            </span>
+          </div>
+        </div>
+
+        <!-- Milestone Progress Tracker (§6.2) -->
+        <div class="milestone-tracker-card">
+          <div class="milestone-card-title">
+            <span>Pelacakan Tahapan Pengerjaan (Milestone Tracker)</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Status Terverifikasi Sistem</span>
+          </div>
+          <div class="milestones-steps">
+            <!-- Step 1 -->
+            <div class="m-step completed">
+              <div class="m-step-circle">1</div>
+              <div class="m-step-title">Konsultasi & Deal</div>
+              <div class="m-step-desc">Selesai 27 Okt</div>
+            </div>
+            <!-- Step 2 -->
+            <div class="m-step completed">
+              <div class="m-step-circle">2</div>
+              <div class="m-step-title">DP 50% Escrow</div>
+              <div class="m-step-desc">Lunas Rp 350.000</div>
+            </div>
+            <!-- Step 3 -->
+            <div class="m-step completed">
+              <div class="m-step-circle">3</div>
+              <div class="m-step-title">Pengerjaan Desain</div>
+              <div class="m-step-desc">CAD & PCB Selesai</div>
+            </div>
+            <!-- Step 4 -->
+            <div class="m-step current">
+              <div class="m-step-circle">4</div>
+              <div class="m-step-title">Review & Revisi</div>
+              <div class="m-step-desc">Tahap Aktif Klien</div>
+            </div>
+            <!-- Step 5 -->
+            <div class="m-step">
+              <div class="m-step-circle">5</div>
+              <div class="m-step-title">Pelunasan & Buka File</div>
+              <div class="m-step-desc">Gembok Master Source</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Brankas File Hasil Kerja (FR-C04 & FR-E03 Lock System) -->
+        <div class="vault-card">
+          <div class="vault-header">
+            <h4>Brankas File Proyek (File Preview vs Master Lock)</h4>
+            <button class="btn btn-outline btn-sm" onclick="window.triggerQuotationModal()">
+              Lihat Scope & Penawaran
+            </button>
+          </div>
+
+          <div class="file-list-grid" id="vault-files-list">
+            <!-- Dynamically populated by app.js -->
+          </div>
+
+          <!-- Vault Settlement & Action Bar -->
+          <div class="vault-settlement-bar">
+            <div class="settlement-balance-box">
+              <p>Sisa Tagihan Pelunasan (Termin 2 - 50%):</p>
+              <h3 id="ws-balance-due">Rp 350.000</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <button class="btn btn-outline btn-sm" id="btn-open-revision" onclick="window.triggerRevisionModal()">
+                Ajukan Tiket Revisi (<span id="rev-quota-remaining">2</span> Tersisa)
+              </button>
+              <button class="btn btn-accent btn-sm" id="ws-pay-btn" onclick="window.triggerPaymentModal()">
+                Bayar Pelunasan (QRIS)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tiket Revisi Terstruktur Log (FR-C05) -->
+        <div class="vault-card">
+          <div class="vault-header">
+            <h4>Riwayat Tiket Revisi Terstruktur (FR-C05)</h4>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Mencegah perubahan konsep liar di luar SoW</span>
+          </div>
+          <div class="revision-log-list" id="revision-log-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Mentoring Pra-Sidang 1-on-1 Card -->
+        <div class="vault-card" style="background:linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-color:var(--primary-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span class="brand-tag" style="background:var(--primary); color:#fff; margin-bottom:0.35rem; display:inline-block;">
+                Program Penguatan Konsep Pra-Sidang
+              </span>
+              <h4 style="font-size:1.05rem; font-weight:800; color:var(--primary-dark);">
+                Sesi Bimbingan Teknis Intensif 1-on-1 (Rp 150.000 / Jam)
+              </h4>
+              <p style="font-size:0.825rem; color:var(--text-muted); margin-top:0.25rem;">
+                Pendalaman arsitektur perangkat keras, logika algoritma firmware mikrokontroler, serta simulasi evaluasi teknis bersama Dian Pratama, S.T. untuk persiapan sidang tugas akhir.
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-primary btn-sm" onclick="window.orderMentoring()">
+                + Ajukan Sesi Bimbingan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. CONSULTANT (ENGINEER) DASHBOARD (§3.2)  -->
+  <!-- ========================================== -->
+  <main id="view-engineer" class="dashboard-wrapper" style="display:none;">
+    <div class="section-header" style="text-align:left; margin-bottom:2rem;">
+      <span class="section-tag">Konsultan Terverifikasi KerjaIN</span>
+      <h3 class="section-title">Workspace Engineer: Dian Pratama, S.T.</h3>
+      <p class="section-subtitle">Spesialisasi: Senior Mechatronics & IoT Embedded System</p>
+    </div>
+
+    <!-- Quick Stats Metric Cards -->
+    <div class="stats-cards-grid">
+      <div class="stat-metric-card">
+        <div class="metric-label">Tugas Proyek Aktif</div>
+        <div class="metric-val">4 Proyek</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Rating Kepuasan Klien</div>
+        <div class="metric-val">★ 4.95 / 5.0</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Saldo Dompet (Siap Tarik)</div>
+        <div class="metric-val" id="cons-wallet-val">Rp 2.450.000</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Dana Tertahan di Escrow</div>
+        <div class="metric-val" id="cons-pending-val" style="color:var(--accent);">Rp 350.000</div>
+      </div>
+    </div>
+
+    <!-- Quotation Builder Form (FR-E02) -->
+    <div class="vault-card" style="margin-bottom:2rem;">
+      <div class="vault-header">
+        <h4>Quotation Builder: Buat Penawaran Resmi (FR-E02)</h4>
+        <span class="brand-tag">Sistem Perhitungan Otomatis</span>
+      </div>
+
+      <form id="quotation-builder-form">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Nama Mahasiswa / Klien</label>
+            <input type="text" class="form-control" value="Bambang Pratama (Teknik Mesin UI)" readonly>
+          </div>
+          <div class="form-group">
+            <label for="qb-project-name">Judul Proyek Rekayasa</label>
+            <input type="text" id="qb-project-name" class="form-control" value="Desain Mekanik & Kontrol Otomasi Gripper Robotika" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="qb-total-cost">Total Kesepakatan Biaya (Rp)</label>
+            <input type="number" id="qb-total-cost" class="form-control" value="700000" step="50000" required>
+            <small class="text-muted">DP 50% (Rp 350.000) dan Pelunasan 50% (Rp 350.000) terbagi otomatis.</small>
+          </div>
+          <div class="form-group">
+            <label>Jatah Kuota Revisi Gratis</label>
+            <input type="number" class="form-control" value="3" readonly>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="qb-sow">Ruang Lingkup Pekerjaan (Scope of Work - 1 baris per item)</label>
+          <textarea id="qb-sow" class="form-control" rows="4">Pemodelan 3D SolidWorks Gripper 3-Finger dengan gearing ratio 1:3
+Analisis tegangan struktur FEA pada beban 5 kg
+Desain skematik & layout PCB controller ESP32 modul I2C sensor
+Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-md">
+          Terbitkan / Perbarui Quotation ke Klien
+        </button>
+      </form>
+    </div>
+
+    <!-- Engineer File Management (§3.2 FR-E03) -->
+    <div class="vault-card">
+      <div class="vault-header">
+        <h4>File Manager Engineer & Lock System Control (FR-E03)</h4>
+        <button class="btn btn-outline btn-sm" onclick="alert('Simulasi: File preview baru berhasil diunggah dengan auto-watermark KerjaIN.')">
+          + Unggah File Preview Baru
+        </button>
+      </div>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+        File master (.SLDPRT, .ZIP) diproteksi oleh cryptographic token dan URL bertanda tangan (Signed URL) yang hanya aktif saat status pembayaran telah lunas di sisi Escrow.
+      </p>
+      <div class="file-item-card">
+        <div class="file-info-group">
+          <div class="file-type-icon icon-zip">ZIP</div>
+          <div>
+            <div class="file-name-title">Full_Source_SolidWorks_STEP_dan_Kode.zip (45.2 MB)</div>
+            <div class="file-meta-sub">Status: <strong>Terkunci Otomatis (Menunggu Pelunasan Klien)</strong></div>
+          </div>
+        </div>
+        <span class="file-badge-tag tag-locked">🔒 Escrow Protected</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 4. ADMIN BACK-OFFICE VIEW (§3.3)           -->
+  <!-- ========================================== -->
+  <main id="view-admin" class="dashboard-wrapper" style="display:none;">
+    <div class="section-header" style="text-align:left; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <span class="section-tag">Back-Office & Operasional</span>
+        <h3 class="section-title">Admin Dispatcher & Escrow Vault</h3>
+        <p class="section-subtitle">Monitoring pemetaan konsultan, transaksi rekening bersama, dan mediasi komplain.</p>
+      </div>
+      <div>
+        <button class="btn btn-outline btn-sm" onclick="window.openBusinessModal()" title="Buka Dokumen Analisis Finansial, Unit Economics & BEP">
+          📊 Buka Analisis Finansial & BEP
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Metric Cards -->
+    <div class="stats-cards-grid">
+      <div class="stat-metric-card">
+        <div class="metric-label">Dana Mengendap di Escrow Vault</div>
+        <div class="metric-val text-primary" id="admin-escrow-vault">Rp 8.750.000</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Pendapatan Komisi Platform (18%)</div>
+        <div class="metric-val text-success" id="admin-platform-rev">Rp 1.575.000</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Tingkat Komplain (Dispute Rate)</div>
+        <div class="metric-val" style="color:var(--success);">0.4% (Aman &lt; 5%)</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="metric-label">Konsultan Aktif Berlisensi</div>
+        <div class="metric-val">32 Mitra</div>
+      </div>
+    </div>
+
+    <!-- Project Dispatcher Table (FR-A01) -->
+    <div class="vault-card" style="margin-bottom:2rem;">
+      <div class="vault-header">
+        <h4>Project Dispatcher: Penugasan Konsultasi Gratis & Proyek Baru (FR-A01)</h4>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Lead ID</th>
+              <th>Nama Mahasiswa & Kampus</th>
+              <th>Topik Kendala</th>
+              <th>Jadwal Sesi</th>
+              <th>Aksi Penugasan</th>
+            </tr>
+          </thead>
+          <tbody id="admin-leads-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Dispute Resolution Center (FR-A03) -->
+    <div class="vault-card">
+      <div class="vault-header">
+        <h4>Dispute Resolution Center & Garansi Hak (FR-A03)</h4>
+        <button class="btn btn-outline btn-sm" onclick="alert('Semua kasus mediasi saat ini telah terselesaikan secara damai.')">
+          Cek Log Mediasi
+        </button>
+      </div>
+      <div class="file-item-card">
+        <div class="file-info-group">
+          <div class="file-type-icon icon-cad">DSP</div>
+          <div>
+            <div class="file-name-title">Tiket #DSP-01 - Proyek #KRJ-199 (Farhan / ITS)</div>
+            <div class="file-meta-sub">Isu: Permintaan revisi dimensi di luar SoW awal &bull; Status: <strong>Mediasi Selesai (Disepakati Adendum Rp 100.000)</strong></div>
+          </div>
+        </div>
+        <span class="status-badge status-completed">Tuntas</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODALS (PREVIEW, PAYMENT, REVISION, QUOTE) -->
+  <!-- ========================================== -->
+
+  <!-- 1. Modal Preview File Hasil Kerja (Watermarked) -->
+  <div class="modal-backdrop" id="modal-preview">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="preview-modal-title">Preview File Proyek</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-watermark-container">
+          <img id="preview-modal-img" src="" alt="File Preview">
+          <div class="watermark-overlay-text" id="preview-modal-watermark">
+            DRAFT REVIEW &bull; KERJAIN WATERMARK
+          </div>
+        </div>
+        <p style="margin-top:1rem; font-size:0.85rem; color:var(--text-muted); text-align:center;">
+          File preview ber-watermark untuk keperluan pengecekan kesesuaian desain sebelum pelunasan tahap 2.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm modal-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Modal Pembayaran Escrow (QRIS / VA) FR-C06 -->
+  <div class="modal-backdrop" id="modal-payment">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Pembayaran Pelunasan Proyek (Escrow KerjaIN)</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center; margin-bottom:1.5rem;">
+          <p class="text-muted" style="font-size:0.85rem;">Sisa Tagihan Tahap 2 (Pelunasan 50%):</p>
+          <h2 class="font-mono" style="font-size:2rem; color:var(--primary); font-weight:800; margin:0.25rem 0;">
+            Rp 350.000
+          </h2>
+          <span class="status-badge status-active">Menunggu Pembayaran</span>
+        </div>
+
+        <div style="background:var(--surface-alt); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem; text-align:center; margin-bottom:1.5rem;">
+          <p style="font-size:0.8rem; font-weight:700; text-transform:uppercase; margin-bottom:0.75rem; color:var(--text-muted);">
+            Scan QRIS Resmi KerjaIN (Semua Bank & E-Wallet)
+          </p>
+          <!-- SVG QR Code Generator Simulation -->
+          <div style="display:inline-block; padding:12px; background:#fff; border-radius:8px; border:1px solid var(--border);">
+            <svg width="160" height="160" viewBox="0 0 100 100">
+              <rect width="100" height="100" fill="#fff"/>
+              <path d="M10 10h30v30h-30z M60 10h30v30h-30z M10 60h30v30h-30z" fill="#0f172a"/>
+              <path d="M16 16h18v18h-18z M66 16h18v18h-18z M16 66h18v18h-18z" fill="#fff"/>
+              <path d="M22 22h6v6h-6z M72 22h6v6h-6z M22 72h6v6h-6z" fill="#0f172a"/>
+              <path d="M46 12h8v8h-8z M46 26h8v8h-8z M12 46h8v8h-8z M26 46h8v8h-8z M46 46h8v8h-8z M60 46h8v8h-8z M74 46h8v8h-8z M46 60h8v8h-8z M60 60h8v8h-8z M74 60h8v8h-8z M46 74h8v8h-8z M60 74h8v8h-8z M74 74h8v8h-8z" fill="#0f172a"/>
+            </svg>
+          </div>
+          <p class="font-mono" style="font-size:0.8rem; margin-top:0.75rem; color:var(--text-muted);">
+            NMID: ID1020268841029 &bull; Berlaku 15:00 menit
+          </p>
+        </div>
+
+        <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">
+          🛡️ <strong>Jaminan Keamanan Escrow:</strong> Begitu pembayaran berhasil, seluruh gembok file asli SolidWorks (.SLDPRT/.STEP) dan kode program (.INO) akan terbuka seketika.
+        </div>
+      </div>
+      <div class="modal-footer" style="flex-direction:column; gap:0.5rem;">
+        <button class="btn btn-accent btn-md" id="btn-simulate-payment" style="width:100%;">
+          Simulasikan Pembayaran Berhasil (QRIS)
+        </button>
+        <button class="btn btn-outline btn-sm modal-close-btn" style="width:100%;">
+          Tutup / Bayar Nanti
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal Form Pengajuan Revisi Terstruktur (FR-C05) -->
+  <div class="modal-backdrop" id="modal-revision">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Ajukan Tiket Revisi Terstruktur (FR-C05)</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <form id="revision-form">
+        <div class="modal-body">
+          <div class="quota-guarantee-note" style="margin-bottom:1rem;">
+            <span>ℹ️ Pengajuan tiket ini akan memotong 1 kuota revisi gratis yang disepakati di Quotation.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="rev-category">Bagian yang Direvisi *</label>
+            <select id="rev-category" class="form-control">
+              <option value="Dimensi 3D CAD">Dimensi / Toleransi Part 3D SolidWorks</option>
+              <option value="Skematik & Pinout PCB">Pinout / Jalur Skematik & PCB</option>
+              <option value="Logika Kode Program">Logika Kode Mikrokontroler / Delay</option>
+              <option value="Lainnya">Lainnya sesuai Scope of Work</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="revision-note-input">Catatan Detail Revisi *</label>
+            <textarea id="revision-note-input" class="form-control" rows="4" placeholder="Tuliskan nomor part atau baris fungsi yang perlu disesuaikan (misal: mohon perbesar diameter lubang baut dari M3 ke M4 pada part gripper finger)..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-sm modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary btn-sm">Kirim Tiket Revisi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Modal Penawaran Resmi (Quotation Digital Approval) FR-C03 -->
+  <div class="modal-backdrop" id="modal-quotation">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Dokumen Quotation & Scope of Work Resmi</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">
+          <h4 style="font-size:1.1rem; color:var(--primary-dark);">Proyek #KRJ-204</h4>
+          <p style="font-size:0.85rem; color:var(--text-muted);">
+            Klien: Bambang Pratama &bull; Konsultan: Dian Pratama, S.T.
+          </p>
+        </div>
+
+        <h5 style="font-size:0.9rem; font-weight:700; margin-bottom:0.5rem;">Ruang Lingkup Pekerjaan (Scope of Work):</h5>
+        <ul style="font-size:0.85rem; padding-left:1.25rem; margin-bottom:1rem; color:var(--text-muted); line-height:1.6;">
+          <li>Pemodelan 3D SolidWorks Gripper 3-Finger dengan gearing ratio 1:3</li>
+          <li>Analisis tegangan struktur FEA (Finite Element Analysis) pada beban 5 kg</li>
+          <li>Desain skematik & layout PCB controller ESP32 modul I2C sensor</li>
+          <li>Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</li>
+        </ul>
+
+        <h5 style="font-size:0.9rem; font-weight:700; margin-bottom:0.5rem;">Daftar Deliverables:</h5>
+        <ul style="font-size:0.85rem; padding-left:1.25rem; margin-bottom:1rem; color:var(--text-muted); line-height:1.6;">
+          <li>File Master 3D (.SLDPRT, .STEP, .IGES)</li>
+          <li>File Gerber PCB & PDF Skematik Altium</li>
+          <li>Source Code C++ (.INO) dengan dokumentasi komentar per baris fungsi</li>
+          <li>3x Kesempatan Revisi Terstruktur Gratis</li>
+        </ul>
+
+        <div style="background:var(--primary-surface); padding:1rem; border-radius:var(--radius-md); font-size:0.85rem;">
+          <strong>Ketentuan Escrow:</strong> Pembayaran dilakukan dalam 2 termin (DP 50% dan Pelunasan 50%). File master asli diserahkan segera setelah pelunasan diverifikasi.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm modal-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Modal Model Bisnis & Sistem Keuntungan (Kewirausahaan) -->
+  <div class="modal-backdrop" id="modal-business">
+    <div class="modal-window" style="max-width:720px;">
+      <div class="modal-header">
+        <div>
+          <span class="brand-tag" style="margin-bottom:0.25rem; display:inline-block;">Kewirausahaan / Pitch Deck</span>
+          <h3>Model Bisnis & Sistem Keuntungan KerjaIN</h3>
+        </div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size:0.875rem;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.75rem; margin-bottom:1.25rem;">
+          <div style="background:var(--primary-surface); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--primary-border);">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">TAKE RATE</div>
+            <div class="font-mono" style="font-size:1.35rem; font-weight:800; color:var(--primary);">18%</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Komisi Escrow Proyek</div>
+          </div>
+          <div style="background:var(--success-surface); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--success-border);">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">CONTRIBUTION MARGIN</div>
+            <div class="font-mono" style="font-size:1.35rem; font-weight:800; color:var(--success);">94.6%</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Laba Kotor per Proyek</div>
+          </div>
+          <div style="background:var(--accent-surface); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--accent-border);">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">TITIK IMPAS (BEP)</div>
+            <div class="font-mono" style="font-size:1.35rem; font-weight:800; color:var(--accent);">17 Proyek</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Tercapai dalam 1 Bulan</div>
+          </div>
+          <div style="background:var(--surface-alt); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">LTV : CAC</div>
+            <div class="font-mono" style="font-size:1.35rem; font-weight:800; color:var(--primary-dark);">9.5 : 1</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Rasio Sangat Sehat</div>
+          </div>
+        </div>
+
+        <h5 style="font-size:0.95rem; font-weight:800; margin-bottom:0.5rem; color:var(--primary-dark);">
+          Simulasi Unit Economics (Contoh Proyek Rata-Rata Rp 800.000):
+        </h5>
+        <div class="data-table-wrap" style="margin-bottom:1.25rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Komponen</th>
+                <th>Nominal</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gross Merchandise Value (GMV)</strong></td>
+                <td class="font-mono"><strong>Rp 800.000</strong></td>
+                <td>Nilai total yang dibayar mahasiswa</td>
+              </tr>
+              <tr>
+                <td>Payout Bersih Konsultan (82%)</td>
+                <td class="font-mono">Rp 656.000</td>
+                <td>Diteruskan ke rekening mitra engineer</td>
+              </tr>
+              <tr>
+                <td><strong>Pendapatan Kotor Platform (18%)</strong></td>
+                <td class="font-mono" style="color:var(--primary); font-weight:700;">Rp 144.000</td>
+                <td>Potongan komisi platform KerjaIN</td>
+              </tr>
+              <tr>
+                <td>Biaya Payment Gateway (QRIS 0.7%) + WA API + Cloud</td>
+                <td class="font-mono" style="color:var(--danger);">- Rp 7.700</td>
+                <td>Direct Variable Cost (COGS)</td>
+              </tr>
+              <tr style="background:var(--success-surface);">
+                <td><strong>Laba Bersih per Transaksi</strong></td>
+                <td class="font-mono" style="color:var(--success); font-weight:800;">Rp 136.300</td>
+                <td><strong>Margin Bersih ~94.6%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:var(--surface-alt); border:1px solid var(--border); padding:0.85rem; border-radius:var(--radius-md); font-size:0.8rem; color:var(--text-muted); line-height:1.5;">
+          💡 <strong>Karakteristik Finansial Unggulan:</strong> KerjaIN beroperasi dengan <em>Negative Working Capital</em> (DP 50% diterima di muka) dan <em>Zero Inventory Risk</em> (biaya konsultan 100% variabel on-demand). Dokumen lengkap tersedia di berkas <code>model_bisnis_dan_sistem_keuntungan_kerjain.md</code>.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm modal-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Kerja<span>IN</span></h3>
+        <p>
+          Platform bimbingan teknis, asistensi rekayasa, dan konsultasi proyek STEM terpercaya untuk mahasiswa teknik dan sains seluruh Indonesia.
+        </p>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-outline btn-sm" id="btn-reset-demo" style="background:rgba(255,255,255,0.06); color:#cbd5e1; border-color:rgba(255,255,255,0.15);">
+            ↺ Reset Data Simulasi PRD
+          </button>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Layanan Rekayasa</h4>
+        <ul class="footer-links">
+          <li><a href="#layanan">Mechanical 3D & FEA</a></li>
+          <li><a href="#layanan">Skematik & Layout PCB</a></li>
+          <li><a href="#layanan">Pemrograman IoT & PLC</a></li>
+          <li><a href="#kalkulator">Kalkulator Biaya Proyek</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Keamanan & Legal</h4>
+        <ul class="footer-links">
+          <li><a href="javascript:void(0)" onclick="alert('Sistem Escrow KerjaIN melindungi hak mahasiswa dan hak konsultan secara berimbang.')">Sistem Escrow Terjamin</a></li>
+          <li><a href="javascript:void(0)" onclick="alert('Perjanjian Kerahasiaan (NDA): Topik skripsi dan file rancangan dijamin 100% rahasia.')">Kerahasiaan Proyek (NDA)</a></li>
+          <li><a href="javascript:void(0)" onclick="alert('Garansi Revisi: 3x jatah revisi gratis untuk setiap quotation yang disepakati.')">Kebijakan Revisi</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Hubungi Kami</h4>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/628123456789" target="_blank">WhatsApp Hotline Resmi</a></li>
+          <li><a href="mailto:halo@kerjain.id">halo@kerjain.id</a></li>
+          <li><span>Jakarta & Bandung, Indonesia</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 KerjaIN Platform Indonesia. Seluruh hak cipta dilindungi.</div>
+      <div style="color:#64748b; font-family:var(--font-mono);">PRD v1.0 Executed &bull; Engineering Blue System</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
