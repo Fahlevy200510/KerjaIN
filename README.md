@@ -36,7 +36,8 @@
 │   └── img/                                     # Aset render 3D CAD, PCB, dan prototipe IoT
 ├── prd_lengkap_platform_kerjain.md             # Dokumen Spesifikasi Kebutuhan Produk (PRD v1.0)
 ├── model_bisnis_dan_sistem_keuntungan_kerjain.md # Dokumen Analisis Finansial & Unit Economics
-├── server.js                                    # Server HTTP lokal zero-dependency
+├── scripts/
+│   └── server.js                                # Server HTTP lokal zero-dependency
 ├── test_kerjain_store.js                        # Script pengujian unit logika inti
 └── vercel.json                                  # Konfigurasi deployment Vercel
 ```
@@ -46,8 +47,9 @@
 ## Menjalankan Secara Lokal
 
 ```bash
-# Jalankan server lokal (Node.js)
-node server.js
+# Jalankan server lokal
+npm start
+# atau: node scripts/server.js
 
 # Akses aplikasi di browser
 http://localhost:3000
