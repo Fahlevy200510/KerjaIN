@@ -119,6 +119,12 @@ const INITIAL_STATE = {
 
   // Admin Back-Office State
   admin: {
+    isAuthenticated: false,
+    adminUser: {
+      name: 'Super Admin',
+      email: 'admin@kerjain.id',
+      role: 'Chief Operational Officer'
+    },
     totalEscrowVault: 8750000,
     platformRevenue: 1575000,
     disputesCount: 1,
@@ -267,6 +273,9 @@ class KerjaINStore {
         if (!parsed.admin || !parsed.admin.orders) {
           parsed.admin = parsed.admin || {};
           parsed.admin.orders = JSON.parse(JSON.stringify(INITIAL_STATE.admin.orders));
+        }
+        if (parsed.admin && parsed.admin.rememberMe === false) {
+          parsed.admin.isAuthenticated = false;
         }
         return parsed;
       }
@@ -483,6 +492,29 @@ class KerjaINStore {
     if (order.escrowStatus === 'WAITING_ASSIGNMENT') {
       order.escrowStatus = 'WAITING_DP';
     }
+    this.saveState();
+    return true;
+  }
+
+  // Action: Admin Login Authentication
+  adminLogin(email, password, rememberMe = true) {
+    const validEmail = (email || '').trim().toLowerCase();
+    const validPass = (password || '').trim();
+
+    if ((validEmail === 'admin@kerjain.id' || validEmail === 'admin') && 
+        (validPass === 'admin123' || validPass === 'admin' || validPass === 'kerjain2026')) {
+      this.state.admin.isAuthenticated = true;
+      this.state.admin.rememberMe = !!rememberMe;
+      this.state.admin.lastLoginAt = new Date().toISOString();
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  // Action: Admin Logout
+  adminLogout() {
+    this.state.admin.isAuthenticated = false;
     this.saveState();
     return true;
   }

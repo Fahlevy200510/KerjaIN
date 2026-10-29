@@ -33,6 +33,7 @@
         <li><a class="nav-link" href="#alur-kerja">Cara Kerja</a></li>
         <li><a class="nav-link" href="#kalkulator">Estimasi Biaya</a></li>
         <li><a class="nav-link" href="#portofolio">Portofolio</a></li>
+        <li><a class="nav-link" href="#" onclick="window.setActiveRole('admin'); return false;" style="font-weight:600; color:var(--primary);">Login Admin</a></li>
       </ul>
 
       <!-- Role Switcher (Simulates the 3 User Personas in PRD §2) -->
@@ -814,13 +815,198 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
   <!-- 4. ADMIN BACK-OFFICE VIEW (§3.3)           -->
   <!-- ========================================== -->
   <main id="view-admin" class="dashboard-wrapper" style="display:none;">
-    <div class="section-header" style="text-align:left; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+    
+    <!-- 4A. DEDICATED ADMIN LOGIN PAGE / GATEKEEPER SCREEN -->
+    <div id="admin-login-screen" class="admin-login-container">
+      <div class="admin-auth-card">
+        <!-- Left Side: Back-Office Command & Security Assurances -->
+        <div class="admin-auth-sidebar">
+          <div>
+            <div class="admin-auth-brand">
+              <div class="admin-shield-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <path d="M9 12l2 2 4-4"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="auth-tag">INTERNAL ACCESS ONLY</span>
+                <h4>KerjaIN Back-Office</h4>
+              </div>
+            </div>
+
+            <div class="admin-auth-intro">
+              <h3>Konsol Operasional, Dispatcher & Escrow Vault</h3>
+              <p>Gerbang otorisasi administrator untuk pengawasan rekening bersama (escrow), validasi DP 50%, pembagian komisi platform 18%, dan mediasi adendum revisi proyek STEM.</p>
+            </div>
+
+            <div class="admin-security-features">
+              <div class="sec-feature-item">
+                <div class="sec-icon">🛡️</div>
+                <div>
+                  <strong>Rekening Bersama Dual-Custody</strong>
+                  <p>Dana DP 50% & pelunasan aman di brankas escrow hingga persetujuan draft watermarked oleh mahasiswa.</p>
+                </div>
+              </div>
+              <div class="sec-feature-item">
+                <div class="sec-icon">⚡</div>
+                <div>
+                  <strong>Dispatcher Cepat Proyek STEM</strong>
+                  <p>Routing order CAD SolidWorks, KiCAD/Altium, dan Arduino C++ ke konsultan ahli terverifikasi.</p>
+                </div>
+              </div>
+              <div class="sec-feature-item">
+                <div class="sec-icon">⚖️</div>
+                <div>
+                  <strong>Mediasi Tiket & Hak Konsultan</strong>
+                  <p>Penegakan batas 3x kuota revisi dan pencairan honor 82% tepat waktu via payment gateway.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-system-status">
+            <div class="status-indicator-row">
+              <span class="status-dot-pulse"></span>
+              <span>Sistem Operasional: <strong>Normal (Enkripsi TLS 1.3)</strong></span>
+            </div>
+            <div class="system-meta-info">
+              <span>Environment: <code>Production / Vercel Edge</code></span>
+              <span>Gateway: <code>Escrow-Vault-ID-01 Active</code></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Interactive Admin Login Form -->
+        <div class="admin-auth-main">
+          <div class="auth-header">
+            <span class="auth-role-badge">Level 3 Controller</span>
+            <h2>Masuk ke Back-Office</h2>
+            <p class="auth-desc">Autentikasi staf operasional dan pengawas rekening bersama KerjaIN.</p>
+          </div>
+
+          <form id="form-admin-page-login" class="admin-login-form">
+            <div id="admin-page-login-error" class="auth-alert-error" style="display:none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Kredensial tidak valid. Silakan gunakan kredensial demo di bawah.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="admin-page-email">
+                <span>Email Kerja / Username Admin</span>
+                <span class="required-star">*</span>
+              </label>
+              <div class="input-with-icon">
+                <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <input type="text" id="admin-page-email" class="form-control" placeholder="admin@kerjain.id" value="admin@kerjain.id" required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <label for="admin-page-password" style="margin-bottom:0;">
+                  <span>Kata Sandi (Master Password)</span>
+                  <span class="required-star">*</span>
+                </label>
+                <button type="button" class="btn-link-xs" onclick="window.adminForgotAlert()">Lupa sandi?</button>
+              </div>
+              <div class="input-with-icon" style="position:relative;">
+                <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input type="password" id="admin-page-password" class="form-control" placeholder="••••••••" value="admin123" required autocomplete="current-password">
+                <button type="button" id="btn-admin-page-toggle-pass" class="toggle-password-btn" title="Tampilkan/Sembunyikan Sandi">
+                  👁️
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="admin-page-token">
+                <span>Simulasi Token Keamanan 2FA (Escrow Access)</span>
+                <span class="badge-optional">Demo Token: 882910</span>
+              </label>
+              <div class="input-with-icon">
+                <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+                <input type="text" id="admin-page-token" class="form-control" placeholder="6 Digit Kode OTP" value="882910" maxlength="6">
+              </div>
+            </div>
+
+            <div class="form-row-auth">
+              <label class="remember-label">
+                <input type="checkbox" id="admin-page-remember" checked>
+                <span>Ingat sesi di workstation ini</span>
+              </label>
+              <span class="auth-security-badge">256-Bit SSL</span>
+            </div>
+
+            <button type="submit" id="btn-admin-submit-login" class="btn btn-primary btn-auth-submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <polyline points="10 17 15 12 10 7"></polyline>
+                <line x1="15" y1="12" x2="3" y2="12"></line>
+              </svg>
+              <span>Masuk ke Konsol Administrasi</span>
+            </button>
+
+            <button type="button" id="btn-admin-page-quick-fill" class="btn btn-outline btn-auth-quick">
+              ⚡ Demo: Isi Kredensial & Masuk Otomatis
+            </button>
+          </form>
+
+          <div class="auth-demo-credentials">
+            <div class="demo-cred-header">
+              <span class="cred-icon">ℹ️</span>
+              <strong>Kredensial Evaluasi Penguji:</strong>
+            </div>
+            <div class="demo-cred-body">
+              <div>Email: <code>admin@kerjain.id</code></div>
+              <div>Password: <code>admin123</code> / <code>admin</code></div>
+            </div>
+          </div>
+
+          <div class="auth-footer-nav">
+            <button type="button" class="btn-back-public" onclick="window.setActiveRole('public')">
+              ← Kembali ke Beranda Publik
+            </button>
+            <span class="text-separator">&bull;</span>
+            <button type="button" class="btn-back-public" onclick="window.setActiveRole('client')">
+              Portal Mahasiswa →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4B. AUTHENTICATED ADMIN DASHBOARD SCREEN -->
+    <div id="admin-dashboard-screen" style="display:none;">
+      <div class="section-header" style="text-align:left; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
       <div>
         <span class="section-tag">Back-Office & Operasional KerjaIN</span>
         <h3 class="section-title">Dashboard Admin & Escrow Pipeline</h3>
         <p class="section-subtitle">Pemantauan order proyek mahasiswa, rekening bersama (escrow vault), penugasan konsultan, dan mediasi revisi.</p>
       </div>
-      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+        <div style="background:var(--surface-alt); border:1px solid var(--border); padding:0.35rem 0.75rem; border-radius:var(--radius-md); font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+          <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%;"></span>
+          <span><strong>Super Admin</strong> (admin@kerjain.id)</span>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="window.adminLogoutAction()" title="Keluar dari Sesi Admin">
+          🔒 Logout
+        </button>
         <button class="btn btn-outline btn-sm" onclick="window.openBusinessModal()" title="Buka Dokumen Analisis Finansial, Unit Economics & BEP">
           📊 Analisis Finansial & BEP
         </button>
@@ -1021,6 +1207,7 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
         </div>
       </div>
     </div>
+    </div> <!-- /#admin-dashboard-screen -->
   </main>
 
   <!-- ========================================== -->
@@ -1279,6 +1466,72 @@ Kode mikrokontroler Arduino/C++ untuk kontrol stepper & telemetri serial</textar
       </div>
       <div class="modal-footer" id="admin-modal-order-footer">
         <button class="btn btn-outline btn-sm modal-close-btn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Modal Login Panel Admin Back-Office -->
+  <div class="modal-backdrop" id="modal-admin-login">
+    <div class="modal-window" style="max-width:440px;">
+      <div class="modal-header" style="text-align:center; display:block; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; background:var(--primary-surface); color:var(--primary); border-radius:12px; margin-bottom:0.75rem; border:1px solid var(--primary-border);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:0.25rem;">Autentikasi Admin KerjaIN</h3>
+        <p class="text-muted" style="font-size:0.825rem;">Panel Akses Back-Office & Manajemen Rekening Bersama</p>
+      </div>
+
+      <div class="modal-body" style="padding:1.5rem;">
+        <form id="form-admin-login">
+          <div id="admin-login-error" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:0.65rem 0.85rem; border-radius:var(--radius-md); font-size:0.8rem; margin-bottom:1rem;">
+            ⚠️ Kredensial tidak valid. Silakan gunakan kredensial demo di bawah.
+          </div>
+
+          <div class="form-group" style="margin-bottom:1.15rem;">
+            <label style="display:block; font-size:0.825rem; font-weight:600; margin-bottom:0.4rem; color:var(--text-heading);">
+              Email / Username Admin
+            </label>
+            <input type="text" id="admin-login-email" class="form-control" placeholder="admin@kerjain.id" value="admin@kerjain.id" required style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:var(--radius-md); font-size:0.9rem;">
+          </div>
+
+          <div class="form-group" style="margin-bottom:1.15rem;">
+            <label style="display:block; font-size:0.825rem; font-weight:600; margin-bottom:0.4rem; color:var(--text-heading);">
+              Kata Sandi (Password)
+            </label>
+            <div style="position:relative;">
+              <input type="password" id="admin-login-password" class="form-control" placeholder="••••••••" value="admin123" required style="width:100%; padding:0.65rem 2.5rem 0.65rem 0.85rem; border:1px solid var(--border); border-radius:var(--radius-md); font-size:0.9rem;">
+              <button type="button" id="btn-toggle-password" style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:0.9rem;" title="Lihat/Sembunyikan Sandi">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; font-size:0.8rem;">
+            <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; color:var(--text-muted);">
+              <input type="checkbox" id="admin-remember-me" checked>
+              <span>Ingat sesi di perangkat</span>
+            </label>
+            <span style="color:var(--primary); font-weight:600; font-size:0.75rem; background:var(--primary-surface); padding:2px 8px; border-radius:4px;">Demo Ready</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.75rem; font-weight:700; margin-bottom:0.75rem;">
+            Masuk ke Back-Office
+          </button>
+
+          <button type="button" class="btn btn-outline btn-sm" id="btn-quick-fill-admin" style="width:100%; font-size:0.8rem; padding:0.5rem;">
+            ⚡ Demo: Isi Kredensial Otomatis
+          </button>
+        </form>
+
+        <div style="margin-top:1.25rem; padding-top:1rem; border-top:1px dashed var(--border); text-align:center; font-size:0.75rem; color:var(--text-muted);">
+          <span>Kredensial Evaluasi: <code>admin@kerjain.id</code> &bull; Sandi: <code>admin123</code></span>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:center; padding:0.75rem;">
+        <button class="btn btn-outline btn-sm modal-close-btn" style="font-size:0.78rem;">Batal</button>
       </div>
     </div>
   </div>

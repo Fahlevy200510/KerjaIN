@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const revisionModal = document.getElementById('modal-revision');
   const quotationModal = document.getElementById('modal-quotation');
   const adminOrderDetailModal = document.getElementById('modal-admin-order-detail');
+  const adminLoginModal = document.getElementById('modal-admin-login');
 
   // Admin Dashboard State
   let activeAdminTab = 'orders';
@@ -30,9 +31,38 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRoleView(role);
   }
 
+  function renderAdminAuthView() {
+    const isAuth = store.state.admin && store.state.admin.isAuthenticated;
+    const loginScreen = document.getElementById('admin-login-screen');
+    const dashboardScreen = document.getElementById('admin-dashboard-screen');
+    const adminRoleBtn = document.querySelector('.role-btn[data-role="admin"]');
+
+    if (adminRoleBtn) {
+      const span = adminRoleBtn.querySelector('span');
+      if (span) {
+        span.textContent = isAuth ? '⚡ Admin (Aktif)' : '⚡ Admin';
+      }
+    }
+
+    if (loginScreen && dashboardScreen) {
+      if (isAuth) {
+        loginScreen.style.display = 'none';
+        dashboardScreen.style.display = 'block';
+      } else {
+        loginScreen.style.display = 'block';
+        dashboardScreen.style.display = 'none';
+      }
+    }
+  }
+
   function renderRoleView(role) {
     roleButtons.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.role === role);
+      if (btn.dataset.role === 'admin') {
+        const isAuth = store.state.admin && store.state.admin.isAuthenticated;
+        const span = btn.querySelector('span');
+        if (span) span.textContent = isAuth ? '⚡ Admin (Aktif)' : '⚡ Admin';
+      }
     });
 
     Object.entries(viewSections).forEach(([name, el]) => {
@@ -44,6 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
+    if (role === 'admin') {
+      renderAdminAuthView();
+    }
 
     // Scroll to top upon role switch
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -478,6 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial render
   renderWorkspace();
+  renderAdminAuthView();
 
   // --- Modal Helpers & Global Triggers ---
   window.openPreviewModal = function(title, imgUrl, badgeText) {
@@ -811,6 +846,158 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Quotation Digital berhasil diperbarui & diterbitkan untuk mahasiswa!', 'success');
     });
   }
+
+  // --- Admin Login Form Handler (Dedicated Page Screen) ---
+  const adminPageLoginForm = document.getElementById('form-admin-page-login');
+  if (adminPageLoginForm) {
+    adminPageLoginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('admin-page-email');
+      const passInput = document.getElementById('admin-page-password');
+      const rememberInput = document.getElementById('admin-page-remember');
+      const errEl = document.getElementById('admin-page-login-error');
+      const submitBtn = document.getElementById('btn-admin-submit-login');
+
+      const email = emailInput ? emailInput.value : '';
+      const pass = passInput ? passInput.value : '';
+      const remember = rememberInput ? rememberInput.checked : true;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>Memverifikasi Akses...</span>`;
+      }
+
+      setTimeout(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            <span>Masuk ke Konsol Administrasi</span>
+          `;
+        }
+
+        const success = store.adminLogin(email, pass, remember);
+
+        if (success) {
+          if (errEl) errEl.style.display = 'none';
+          renderAdminAuthView();
+          renderWorkspace();
+          showToast('Autentikasi Admin Berhasil! Selamat datang di Back-Office KerjaIN.', 'success');
+        } else {
+          if (errEl) errEl.style.display = 'flex';
+        }
+      }, 350);
+    });
+  }
+
+  // Admin Page Password Visibility Toggle
+  const togglePassPageBtn = document.getElementById('btn-admin-page-toggle-pass');
+  if (togglePassPageBtn) {
+    togglePassPageBtn.addEventListener('click', () => {
+      const passInput = document.getElementById('admin-page-password');
+      if (passInput) {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+        togglePassPageBtn.textContent = isPass ? '🔒' : '👁️';
+      }
+    });
+  }
+
+  // Admin Page Quick Fill Demo Button
+  const quickFillPageBtn = document.getElementById('btn-admin-page-quick-fill');
+  if (quickFillPageBtn) {
+    quickFillPageBtn.addEventListener('click', () => {
+      const emailInput = document.getElementById('admin-page-email');
+      const passInput = document.getElementById('admin-page-password');
+      const tokenInput = document.getElementById('admin-page-token');
+      if (emailInput) emailInput.value = 'admin@kerjain.id';
+      if (passInput) passInput.value = 'admin123';
+      if (tokenInput) tokenInput.value = '882910';
+      if (adminPageLoginForm) {
+        adminPageLoginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+  }
+
+  // --- Modal Admin Login Form Handler ---
+  const adminLoginForm = document.getElementById('form-admin-login');
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('admin-login-email');
+      const passInput = document.getElementById('admin-login-password');
+      const errEl = document.getElementById('admin-login-error');
+
+      const email = emailInput ? emailInput.value : '';
+      const pass = passInput ? passInput.value : '';
+
+      const success = store.adminLogin(email, pass, true);
+
+      if (success) {
+        if (errEl) errEl.style.display = 'none';
+        if (adminLoginModal) adminLoginModal.classList.remove('active');
+        store.setRole('admin');
+        renderRoleView('admin');
+        renderAdminAuthView();
+        renderWorkspace();
+        showToast('Autentikasi Admin berhasil! Selamat datang di Back-Office KerjaIN.', 'success');
+      } else {
+        if (errEl) errEl.style.display = 'block';
+      }
+    });
+  }
+
+  // Modal Admin Password Visibility Toggle
+  const togglePassBtn = document.getElementById('btn-toggle-password');
+  if (togglePassBtn) {
+    togglePassBtn.addEventListener('click', () => {
+      const passInput = document.getElementById('admin-login-password');
+      if (passInput) {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+        togglePassBtn.textContent = isPass ? '🔒' : '👁️';
+      }
+    });
+  }
+
+  // Modal Admin Quick Fill Demo Button
+  const quickFillAdminBtn = document.getElementById('btn-quick-fill-admin');
+  if (quickFillAdminBtn) {
+    quickFillAdminBtn.addEventListener('click', () => {
+      const emailInput = document.getElementById('admin-login-email');
+      const passInput = document.getElementById('admin-login-password');
+      if (emailInput) emailInput.value = 'admin@kerjain.id';
+      if (passInput) passInput.value = 'admin123';
+      if (adminLoginForm) {
+        adminLoginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+  }
+
+  // Global Admin Login & Logout Actions
+  window.openAdminLoginModal = function() {
+    setActiveRole('admin');
+  };
+
+  window.adminForgotAlert = function() {
+    alert('Informasi Kredensial Administrator KerjaIN (Demo Evaluasi):\n\nEmail: admin@kerjain.id\nKata Sandi: admin123 (atau admin)\nToken 2FA Escrow: 882910\n\nUntuk produksi, hubungi Tim Keamanan KerjaIN (security@kerjain.id).');
+  };
+
+  window.adminLogoutAction = function() {
+    if (confirm('Keluar dari sesi Admin KerjaIN?')) {
+      store.adminLogout();
+      renderAdminAuthView();
+      showToast('Sesi Admin telah diakhiri.', 'primary');
+    }
+  };
+
+  window.setActiveRole = setActiveRole;
+  window.renderRoleView = renderRoleView;
+  window.renderAdminAuthView = renderAdminAuthView;
 
   // --- Reset All Data ---
   const resetBtn = document.getElementById('btn-reset-demo');

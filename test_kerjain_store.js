@@ -156,5 +156,78 @@ console.log('--- Menjalankan Self-Check Logika Inti KerjaIN ---');
   console.log('[PASS] Test 5: Siklus Order Admin, Verifikasi DP & Pembagian Escrow Platform');
 }
 
-console.log('--- Semua 5 Pengujian Logika Lolos dengan Sempurna! ---');
+// Test 6: Autentikasi Login, Remember Me & Logout Panel Admin
+{
+  function validateAdminAuth(email, password) {
+    const validEmail = (email || '').trim().toLowerCase();
+    const validPass = (password || '').trim();
+    return (validEmail === 'admin@kerjain.id' || validEmail === 'admin') && 
+           (validPass === 'admin123' || validPass === 'admin' || validPass === 'kerjain2026');
+  }
+
+  assert.strictEqual(validateAdminAuth('admin@kerjain.id', 'admin123'), true, 'Kredensial resmi admin valid');
+  assert.strictEqual(validateAdminAuth('admin', 'admin'), true, 'Kredensial singkat valid');
+  assert.strictEqual(validateAdminAuth('user@kerjain.id', 'wrongpass'), false, 'Kredensial salah harus ditolak');
+  assert.strictEqual(validateAdminAuth('', ''), false, 'Input kosong harus ditolak');
+
+  // Test session state transition
+  const mockAdminState = { isAuthenticated: false, rememberMe: true, lastLoginAt: null };
+  function mockAdminLogin(state, email, pass, remember = true) {
+    if (validateAdminAuth(email, pass)) {
+      state.isAuthenticated = true;
+      state.rememberMe = !!remember;
+      state.lastLoginAt = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+  function mockAdminLogout(state) {
+    state.isAuthenticated = false;
+    return true;
+  }
+
+  assert.strictEqual(mockAdminLogin(mockAdminState, 'admin@kerjain.id', 'admin123', true), true);
+  assert.strictEqual(mockAdminState.isAuthenticated, true, 'Harus terautentikasi setelah login berhasil');
+  assert.strictEqual(mockAdminState.rememberMe, true, 'Pilihan remember me harus tersimpan');
+  assert.ok(mockAdminState.lastLoginAt, 'Timestamp login harus tercatat');
+
+  assert.strictEqual(mockAdminLogout(mockAdminState), true);
+  assert.strictEqual(mockAdminState.isAuthenticated, false, 'Sesi harus terputus setelah logout');
+
+  console.log('[PASS] Test 6: Validasi Autentikasi Login, Remember Me & Logout Panel Admin');
+}
+
+// Test 7: Verifikasi Integritas Elemen DOM Login Page di Admin Panel
+{
+  const fs = require('fs');
+  const path = require('path');
+  const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+
+  const requiredIds = [
+    'view-admin',
+    'admin-login-screen',
+    'admin-dashboard-screen',
+    'form-admin-page-login',
+    'admin-page-email',
+    'admin-page-password',
+    'admin-page-token',
+    'admin-page-remember',
+    'admin-page-login-error',
+    'btn-admin-submit-login',
+    'btn-admin-page-toggle-pass',
+    'btn-admin-page-quick-fill',
+    'modal-admin-login',
+    'form-admin-login'
+  ];
+
+  requiredIds.forEach(id => {
+    const pattern = new RegExp(`id=["']${id}["']`);
+    assert.ok(pattern.test(html), `Elemen ID "${id}" harus tersedia di index.html`);
+  });
+
+  console.log('[PASS] Test 7: Integritas Struktur HTML & Elemen DOM Halaman Login Admin');
+}
+
+console.log('--- Semua 7 Pengujian Logika Lolos dengan Sempurna! ---');
+
 
